@@ -5,13 +5,13 @@ Streamlit Dashboard — POD Trend Engine
 import sys
 import os
 import json
-import sqlite3
+import psycopg2
 import pandas as pd
 import plotly.express as px
 import streamlit as st
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from db.database import init_db, get_top_trends, get_outputs_for_trend, insert_output, DB_PATH
+from db.database import init_db, get_top_trends, get_outputs_for_trend, insert_output, get_connection
 
 # ── Sayfa ayarları ────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -56,14 +56,17 @@ with st.sidebar:
         st.rerun()
 
     st.divider()
-    st.caption(f"📂 DB: `{DB_PATH}`")
+    st.caption("📂 DB: `PostgreSQL (Railway)`")
     try:
-        conn = sqlite3.connect(DB_PATH)
-        counts = conn.execute("SELECT (SELECT COUNT(*) FROM signals), (SELECT COUNT(*) FROM trends WHERE analyzed=1)").fetchone()
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT (SELECT COUNT(*) FROM signals), (SELECT COUNT(*) FROM trends WHERE analyzed=1)")
+        counts = cur.fetchone()
         st.caption(f"📊 Sinyal: {counts[0]} | Analiz: {counts[1]}")
+        cur.close()
         conn.close()
-    except:
-        st.caption("⚠️ DB Bağlantı Hatası")
+    except Exception as e:
+        st.caption(f"⚠️ DB Bağlantı Hatası: {str(e)[:50]}...")
 
     st.divider()
 
@@ -270,10 +273,10 @@ with tab3:
 
         # CSV export
         st.subheader("Etsy Bulk Upload CSV")
-        conn = sqlite3.connect(DB_PATH)
         export_rows = []
         for _, row in df[df["trend_score"] >= 7.5].head(50).iterrows():
             outputs = get_outputs_for_trend(int(row["id"]))
+            # outputs is list of (output_type, content, created_at)
             listing = next((o for o in outputs if o[0] == "etsy_listing"), None)
             if listing:
                 try:
@@ -287,7 +290,6 @@ with tab3:
                     })
                 except Exception:
                     pass
-        conn.close()
 
         if export_rows:
             export_df = pd.DataFrame(export_rows)
