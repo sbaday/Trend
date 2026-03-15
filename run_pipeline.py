@@ -117,6 +117,10 @@ def run_schedule():
     print("- Her 2 saatte bir: Veri Toplama + Phrase Extraction")
     print("- Her gece 23:00  : Sadece Gemini Analizi")
     print("Çıkmak için CTRL+C yapabilirsiniz.\n")
+
+    # Başlangıçta hemen bir kez çalıştır (Railway deploy anında başlasın)
+    job_collect()
+    
     try:
         scheduler.start()
     except (KeyboardInterrupt, SystemExit):
