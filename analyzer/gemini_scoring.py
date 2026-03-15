@@ -23,6 +23,7 @@ from dotenv import load_dotenv
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from db.database import init_db, get_unanalyzed, update_scores
 from models import ScoringOutput
+from validation.momentum import hybrid_validate
 
 load_dotenv()
 
@@ -57,9 +58,14 @@ def analyze_batch(verbose: bool = True, min_mentions: int = 3) -> int:
         return 0
 
     analyzed = 0
-    for trend_id, phrase, source, subreddit in rows:
+    for trend_id, phrase, source, subreddit, total_mentions in rows:
         if verbose:
-            print(f"  → [{trend_id}] '{phrase[:55]}...' " if len(phrase) > 55 else f"  → [{trend_id}] '{phrase}'", end=" ", flush=True)
+            print(f"  → [{trend_id}] '{phrase[:50]}...' (Mentions: {total_mentions})", end=" ", flush=True)
+
+        # Momentum Engine - Validation
+        momentum_res = hybrid_validate(phrase, total_mentions, threshold=20)
+        is_viral = momentum_res["internal_viral"]
+        external = momentum_res["external_validation"]
 
         try:
             prompt = USER_TEMPLATE.format(
@@ -95,7 +101,9 @@ def analyze_batch(verbose: bool = True, min_mentions: int = 3) -> int:
 
             if verbose:
                 flag = "🔥" if score >= SCORE_THRESHOLD else "  "
-                print(f"{flag} skor={score:.2f} niş={niche}")
+                v_flag = " [VIRAL!]" if is_viral else ""
+                g_score = f" GT:{external['score']}" if external.get('valid') else ""
+                print(f"{flag}{v_flag} skor={score:.2f} niş={niche}{g_score}")
 
             # API rate limit — küçük bekleme
             time.sleep(0.3)

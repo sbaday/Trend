@@ -98,28 +98,22 @@ def run_schedule():
     def log_time(msg):
         print(f"\n\n⏰ [{datetime.now().strftime('%Y-%m-%d %H:%M')}] {msg}")
         
-    def job_collect():
-        log_time("Veri Toplama ve Çıkarma Başlıyor (2 Saatlik Agresif Döngü)...")
+    def job_full_cycle():
+        log_time("Tam Döngü Başlıyor (Toplama + Çıkarma + Analiz)...")
         run_collect()
         run_extract()
-        
-    def job_analyze_only():
-        log_time("Günlük Gemini Analizi Başlıyor (İçerik Üretimi Atlanıyor)...")
         run_analyze()
         
-    # Her 2 saatte bir -> collect + extract
-    scheduler.add_job(job_collect, 'interval', hours=2)
-    
-    # Her gece 23:00 -> Tüm gün toplananları analiz et
-    scheduler.add_job(job_analyze_only, 'cron', hour=23, minute=0)
+    # Her 2 saatte bir -> collect + extract + analyze
+    scheduler.add_job(job_full_cycle, 'interval', hours=2)
     
     print("Zamanlayıcı AGRESİF modda.")
-    print("- Her 2 saatte bir: Veri Toplama + Phrase Extraction")
-    print("- Her gece 23:00  : Sadece Gemini Analizi")
+    print("- Her 2 saatte bir: Veri Toplama + Phrase Extraction + Gemini Analizi")
+    print("- Gece 23:00'te ekstra analiz job'ı kaldırıldı, her döngü analiz içeriyor.")
     print("Çıkmak için CTRL+C yapabilirsiniz.\n")
 
     # Başlangıçta hemen bir kez çalıştır (Railway deploy anında başlasın)
-    job_collect()
+    job_full_cycle()
     
     try:
         scheduler.start()

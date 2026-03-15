@@ -201,7 +201,7 @@ def get_unanalyzed(limit=50, min_mentions=1):
     conn = get_connection()
     cur = conn.cursor()
     cur.execute(
-        "SELECT id, normalized_phrase, 'extracted' as source, '' as subreddit "
+        "SELECT id, normalized_phrase, 'extracted' as source, '' as subreddit, total_mentions "
         "FROM trends WHERE analyzed=0 AND total_mentions >= %s "
         "ORDER BY total_mentions DESC LIMIT %s", 
         (min_mentions, limit)
