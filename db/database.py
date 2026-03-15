@@ -3,14 +3,17 @@ from psycopg2.extras import RealDictCursor
 import os
 from datetime import datetime
 
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-
 def get_connection():
     # Railway provides DATABASE_URL automatically
-    if not DATABASE_URL:
+    url = os.getenv("DATABASE_URL")
+    if not url:
         raise ValueError("DATABASE_URL environment variable is not set!")
-    return psycopg2.connect(DATABASE_URL)
+    
+    # Critical Fix: Remove "DATABASE_URL=" prefix if accidentally included in the env value
+    if url.startswith("DATABASE_URL="):
+        url = url.replace("DATABASE_URL=", "", 1)
+        
+    return psycopg2.connect(url)
 
 
 def init_db():
