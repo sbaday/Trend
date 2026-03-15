@@ -9,7 +9,11 @@ def get_connection():
     if not url:
         raise ValueError("DATABASE_URL environment variable is not set!")
     
-    # Critical Fix: Remove "DATABASE_URL=" prefix if accidentally included in the env value
+    # Railway postgresql:// → postgres:// dönüşümü (psycopg2 uyumu için)
+    if url.startswith("postgresql://"):
+        url = url.replace("postgresql://", "postgres://", 1)
+    
+    # Prefix temizleme (DATABASE_URL= kısmı kazara eklenmişse)
     if url.startswith("DATABASE_URL="):
         url = url.replace("DATABASE_URL=", "", 1)
         
