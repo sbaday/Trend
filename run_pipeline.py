@@ -89,6 +89,31 @@ def run_generate():
     print(f"\n  Toplam üretilen: {n} içerik seti")
 
 
+def run_momentum():
+    header("MOMENTUM ENGINE — Viral Doğrulama")
+    from validation.momentum import hybrid_validate
+    from db.database import get_connection
+    
+    conn = get_connection()
+    cur = conn.cursor()
+    # En az 20 kez görülmüş ama henüz kapsamlı doğrulanmamış veya her gün bir kez kontrol edilen adaylar
+    cur.execute("SELECT normalized_phrase, total_mentions FROM trends WHERE total_mentions >= 20 ORDER BY total_mentions DESC")
+    candidates = cur.fetchall()
+    cur.close()
+    conn.close()
+    
+    if not candidates:
+        print("  Sistemde henüz eşiği (20 mention) aşan viral adayı yok.")
+        return
+        
+    print(f"  {len(candidates)} aday kontrol ediliyor...")
+    for phrase, count in candidates:
+        res = hybrid_validate(phrase, count, threshold=20)
+        ext = res["external_validation"]
+        status = "✅ ONAYLANDI" if ext.get("valid") else "⏳ Beklemede"
+        print(f"  → '{phrase}': {status} (Skor: {ext.get('score', 0)})")
+
+
 def run_schedule():
     header("Zamanlayıcı Başlatılıyor")
     from apscheduler.schedulers.blocking import BlockingScheduler
@@ -103,13 +128,20 @@ def run_schedule():
         run_collect()
         run_extract()
         run_analyze()
+
+    def job_momentum_check():
+        log_time("Günlük Momentum Doğrulama Job'ı Başlıyor...")
+        run_momentum()
         
     # Her 2 saatte bir -> collect + extract + analyze
     scheduler.add_job(job_full_cycle, 'interval', hours=2)
     
+    # Her gün sabaha karşı 04:00 -> Momentum Doğrulama
+    scheduler.add_job(job_momentum_check, 'cron', hour=4, minute=0)
+    
     print("Zamanlayıcı AGRESİF modda.")
     print("- Her 2 saatte bir: Veri Toplama + Phrase Extraction + Gemini Analizi")
-    print("- Gece 23:00'te ekstra analiz job'ı kaldırıldı, her döngü analiz içeriyor.")
+    print("- Her gün 04:00   : Momentum Engine Viral Doğrulama")
     print("Çıkmak için CTRL+C yapabilirsiniz.\n")
 
     # Başlangıçta hemen bir kez çalıştır (Railway deploy anında başlasın)
