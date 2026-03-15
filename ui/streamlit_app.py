@@ -9,8 +9,13 @@ import psycopg2
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+from dotenv import load_dotenv
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+# Load environment variables from root directory
+root_path = os.path.join(os.path.dirname(__file__), "..")
+sys.path.insert(0, root_path)
+load_dotenv(os.path.join(root_path, ".env"))
+
 from db.database import init_db, get_top_trends, get_outputs_for_trend, insert_output, get_connection
 
 # ── Sayfa ayarları ────────────────────────────────────────────────────────────
