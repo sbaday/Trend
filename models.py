@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List, Optional, Literal
 
 class SignalOutput(BaseModel):
     id: Optional[int] = None
@@ -18,7 +18,11 @@ class ScoringOutput(BaseModel):
     identity: int = Field(default=5, ge=1, le=10)
     giftability: int = Field(default=5, ge=1, le=10)
     design_simplicity: int = Field(default=5, ge=1, le=10)
-    niche: str = ""
+    niche: Literal[
+        "Pets", "Fitness", "Gaming", "Funny", "Occupation", 
+        "Hobby", "Family", "Holiday", "Aesthetic", "Politics", 
+        "Crypto", "General"
+    ] = "General"
     reasoning: str = ""
     final_score: float = 0.0
 

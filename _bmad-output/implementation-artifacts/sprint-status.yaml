@@ -1,0 +1,81 @@
+# generated: 2026-03-15
+# last_updated: 2026-03-15
+# project: test Trend
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: c:\Users\doguk\OneDrive\Belgeler\test Trend\_bmad-output\implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - SM typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-03-15
+last_updated: 2026-03-15
+project: test Trend
+project_key: NOKEY
+tracking_system: file-system
+story_location: c:\Users\doguk\OneDrive\Belgeler\test Trend\_bmad-output\implementation-artifacts
+
+development_status:
+  epic-1: done
+  1-1-reddit-rss-sinyal-toplayici: done
+  1-2-hackernews-en-populer-gonderiler-toplayici: done
+  1-3-google-trends-ilgili-sorgu-kesfi: done
+  epic-1-retrospective: optional
+
+  epic-2: done
+  2-1-tf-idf-phrase-cikarimi: done
+  2-2-radar-skor-placeholder: done
+  2-3-semantik-embedding-tablosu-hazirligi: done
+  epic-2-retrospective: optional
+
+  epic-3: done
+  3-1-gemini-analiz-modulu: done
+  3-2-nis-belirleme-mantigi: done
+  epic-3-retrospective: optional
+
+  epic-4: done
+  4-1-otomatik-etsy-listing-uretimi: done
+  4-2-gorsel-tasarim-prompt-motoru: done
+  4-3-cok-platformlu-sosyal-icerik-uretimi: done
+  epic-4-retrospective: optional
+
+  epic-5: done
+  5-1-pipeline-orkestrasyonu-zamanlama: done
+  5-2-streamlit-analitik-dashboard: done
+  5-3-monitoring-calisma-gecmisi: done
+  epic-5-retrospective: optional
+
+  epic-6: backlog
+  6-1-printify-draft-entegrasyonu: backlog
+  epic-6-retrospective: optional
+
+  epic-7: backlog
+  7-1-radar-skor-hesaplama-mantigi: backlog
+  7-2-momentum-saturasyon-placeholder-altyapisi: backlog
+  epic-7-retrospective: optional

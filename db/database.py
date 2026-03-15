@@ -2,6 +2,9 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import os
 from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def get_connection():
     # Railway provides DATABASE_URL automatically
@@ -34,6 +37,7 @@ def init_db():
             raw_title       TEXT NOT NULL,
             url             TEXT,
             engagement      INTEGER DEFAULT 0,
+            processed       BOOLEAN DEFAULT FALSE,
             captured_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
@@ -86,14 +90,13 @@ def init_db():
         )
     """)
 
-    # 5. Output Tablosu
+    # 6. Trend Embeddings (Pre-V3)
     cur.execute("""
-        CREATE TABLE IF NOT EXISTS outputs (
+        CREATE TABLE IF NOT EXISTS trend_embeddings (
             id              SERIAL PRIMARY KEY,
-            trend_id        INTEGER REFERENCES trends(id),
-            output_type     TEXT NOT NULL,
-            content         TEXT NOT NULL,
-            created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            trend_id        INTEGER REFERENCES trends(id) UNIQUE,
+            embedding       REAL[], -- Array for semantic vectors
+            last_updated    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
     
@@ -118,14 +121,24 @@ def insert_signal(source: str, raw_title: str, subsource: str = None, url: str =
     return sig_id
 
 
-def get_unprocessed_signals(limit=100):
+def get_unprocessed_signals(limit=500):
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("SELECT id, source, raw_title, url, engagement, captured_at FROM signals ORDER BY id DESC LIMIT %s", (limit,))
+    cur.execute("SELECT id, source, raw_title, url, engagement, captured_at FROM signals WHERE processed = FALSE ORDER BY id ASC LIMIT %s", (limit,))
     rows = cur.fetchall()
     cur.close()
     conn.close()
     return rows
+
+
+def mark_signals_processed(signal_ids):
+    if not signal_ids: return
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("UPDATE signals SET processed = TRUE WHERE id = ANY(%s)", (signal_ids,))
+    conn.commit()
+    cur.close()
+    conn.close()
 
 
 def upsert_trend(normalized_phrase: str, platform: str, engagement: int) -> int:
@@ -224,16 +237,34 @@ def update_scores(trend_id: int, humor: float, identity: float, giftability: flo
     conn.close()
 
 
-def get_top_trends(limit=50, min_score=7.0):
+def get_top_trends(limit=50, min_score=7.0, niches=None, start_date=None, end_date=None):
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute(
-        "SELECT id, normalized_phrase, 'extracted' as source, '' as subreddit, "
-        "ai_score as trend_score, niche, humor, identity, giftability, design, first_seen as created_at "
-        "FROM trends WHERE analyzed=1 AND ai_score >= %s "
-        "ORDER BY ai_score DESC LIMIT %s",
-        (min_score, limit)
-    )
+    
+    query = """
+        SELECT id, normalized_phrase, 'extracted' as source, '' as subreddit, 
+        ai_score as trend_score, niche, humor, identity, giftability, design, first_seen as created_at 
+        FROM trends 
+        WHERE analyzed=1 AND ai_score >= %s
+    """
+    params = [min_score]
+    
+    if niches:
+        query += " AND niche = ANY(%s)"
+        params.append(niches)
+    
+    if start_date:
+        query += " AND first_seen >= %s"
+        params.append(start_date)
+    
+    if end_date:
+        query += " AND first_seen <= %s"
+        params.append(end_date)
+        
+    query += " ORDER BY ai_score DESC LIMIT %s"
+    params.append(limit)
+    
+    cur.execute(query, params)
     rows = cur.fetchall()
     cur.close()
     conn.close()

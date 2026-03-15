@@ -7,6 +7,7 @@ STOP_WORDS = {
     "about", "by", "from", "up", "down", "out", "of", "this", "that", "it", "is",
     "are", "was", "were", "be", "been", "I", "you", "he", "she", "we", "they",
     "whose", "how", "why", "where", "when", "can", "will", "would", "should", "could",
+    "my", "your", "his", "her", "their", "our",
     # Custom POD noise filters
     "people", "thing", "things", "really", "today", "someone", "something", 
     "just", "like", "them", "then", "than", "there", "theyre", "weve", "im", "dont",
@@ -36,7 +37,7 @@ def extract_phrases_tfidf(texts: list[str]) -> dict[str, str]:
     # 2-3 kelimelik phrase'leri arıyoruz (POD tişört tasarımları için en uygunu)
     vectorizer = TfidfVectorizer(
         stop_words=list(STOP_WORDS),
-        ngram_range=(2, 4),
+        ngram_range=(1, 3),
         max_features=1000
     )
     

@@ -27,7 +27,7 @@ except ImportError:
 
 load_dotenv()
 
-MODEL = "gemini-2.5-flash"
+MODEL = "gemini-flash-latest"
 SCORE_THRESHOLD = 7.0
 
 

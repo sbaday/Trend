@@ -65,12 +65,15 @@ def run_extract():
     extracted = extract_phrases_tfidf(titles)
     
     saved = 0
+    signal_ids = []
     for row in rows:
         sig_id, source, raw_title, url, engagement, captured_at = row
         phrase = extracted.get(raw_title, raw_title)
         upsert_trend(normalized_phrase=phrase, platform=source, engagement=engagement)
+        signal_ids.append(sig_id)
         saved += 1
         
+    mark_signals_processed(signal_ids)
     print(f"  Toplam: {saved} sinyal tişört trendlerine (phrase) çıkarıldi.")
 
 
@@ -114,43 +117,61 @@ def run_momentum():
         print(f"  → '{phrase}': {status} (Skor: {ext.get('score', 0)})")
 
 
+import logging
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[
+        logging.FileHandler("pipeline.log"),
+        logging.StreamHandler()
+    ]
+)
+
 def run_schedule():
     header("Zamanlayıcı Başlatılıyor")
     from apscheduler.schedulers.blocking import BlockingScheduler
     
     scheduler = BlockingScheduler()
     
-    def log_time(msg):
-        print(f"\n\n⏰ [{datetime.now().strftime('%Y-%m-%d %H:%M')}] {msg}")
-        
     def job_full_cycle():
-        log_time("Tam Döngü Başlıyor (Toplama + Çıkarma + Analiz)...")
-        run_collect()
-        run_extract()
-        run_analyze()
+        logging.info("--- Tam Döngü Başlıyor (Toplama + Çıkarma + Analiz + Üretim) ---")
+        try:
+            run_collect()
+            run_extract()
+            run_analyze()
+            run_generate()
+            logging.info("Tam döngü başarıyla tamamlandı.")
+        except Exception as e:
+            logging.error(f"Tam döngü sırasında kritik hata: {e}")
 
     def job_momentum_check():
-        log_time("Günlük Momentum Doğrulama Job'ı Başlıyor...")
-        run_momentum()
+        logging.info("--- Günlük Momentum Doğrulama Job'ı Başlıyor ---")
+        try:
+            run_momentum()
+            logging.info("Momentum doğrulaması tamamlandı.")
+        except Exception as e:
+            logging.error(f"Momentum doğrulaması sırasında hata: {e}")
         
-    # Her 2 saatte bir -> collect + extract + analyze
+    # Her 2 saatte bir -> collect + extract + analyze + generate
     scheduler.add_job(job_full_cycle, 'interval', hours=2)
     
     # Her gün sabaha karşı 04:00 -> Momentum Doğrulama
     scheduler.add_job(job_momentum_check, 'cron', hour=4, minute=0)
     
-    print("Zamanlayıcı AGRESİF modda.")
-    print("- Her 2 saatte bir: Veri Toplama + Phrase Extraction + Gemini Analizi")
-    print("- Her gün 04:00   : Momentum Engine Viral Doğrulama")
-    print("Çıkmak için CTRL+C yapabilirsiniz.\n")
+    logging.info("Zamanlayıcı MODÜLER ve DAYANIKLI modda.")
+    logging.info("- Her 2 saatte bir: Full Pipeline (ADIM 1-4)")
+    logging.info("- Her gün 04:00   : Momentum Engine Viral Doğrulama")
+    logging.info("Çıkmak için CTRL+C yapabilirsiniz.\n")
 
-    # Başlangıçta hemen bir kez çalıştır (Railway deploy anında başlasın)
+    # Başlangıçta hemen bir kez çalıştır (Railway/Docker deploy anında başlasın)
     job_full_cycle()
     
     try:
         scheduler.start()
     except (KeyboardInterrupt, SystemExit):
-        print("\nZamanlayıcı durduruldu.")
+        logging.info("Zamanlayıcı durduruldu.")
 
 
 def main():

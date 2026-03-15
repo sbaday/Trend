@@ -47,8 +47,14 @@ with st.sidebar:
     min_score = st.slider("Min. Trend Skoru", 0.0, 10.0, 0.0, 0.5)
     niche_filter = st.multiselect(
         "Niş Filtresi",
-        ["funny", "gaming", "fitness", "outdoor", "cats", "dogs", "programmer", "eid", "general"],
+        ["Pets", "Fitness", "Gaming", "Funny", "Occupation", "Hobby", "Family", "Holiday", "Aesthetic", "Politics", "Crypto", "General"],
         default=[]
+    )
+    
+    date_range = st.date_input(
+        "Tarih Aralığı",
+        value=(pd.Timestamp.now() - pd.Timedelta(days=7), pd.Timestamp.now()),
+        help="Trendlerin ilk görülme tarihine göre filtrele"
     )
     
     if st.button("🔄 Önbelleği Temizle"):
@@ -108,17 +114,22 @@ init_db()
 
 
 @st.cache_data(ttl=60)
-def load_data(min_s, niches):
-    rows = get_top_trends(limit=200, min_score=min_s)
+def load_data(min_s, niches, d_range):
+    start_d, end_d = None, None
+    if isinstance(d_range, (list, tuple)) and len(d_range) == 2:
+        start_d, end_d = d_range
+        # Convert date to timestamp for DB
+        start_d = datetime.combine(start_d, datetime.min.time()) if start_d else None
+        end_d = datetime.combine(end_d, datetime.max.time()) if end_d else None
+
+    rows = get_top_trends(limit=200, min_score=min_s, niches=niches if niches else None, start_date=start_d, end_date=end_d)
     cols = ["id", "phrase", "source", "subreddit", "trend_score", "niche",
             "humor", "identity", "giftability", "design", "created_at"]
     df = pd.DataFrame(rows, columns=cols)
-    if niches:
-        df = df[df["niche"].isin(niches)]
     return df
 
 
-df = load_data(min_score, niche_filter)
+df = load_data(min_score, niche_filter, date_range)
 
 # ── Üst metrikler ─────────────────────────────────────────────────────────────
 m1, m2, m3, m4 = st.columns(4)
@@ -130,7 +141,7 @@ m4.metric("Nişler",        df["niche"].nunique() if not df.empty else 0)
 st.divider()
 
 # ── Sekmeler ──────────────────────────────────────────────────────────────────
-tab1, tab2, tab3 = st.tabs(["📊 Trend Feed", "🎨 Ürün Üretici", "📈 Haftalık Rapor"])
+tab1, tab2, tab3, tab4 = st.tabs(["📊 Trend Feed", "🎨 Ürün Üretici", "📈 Haftalık Rapor", "🛠️ Sistem İzleme"])
 
 
 # ── TAB 1: Trend Feed ─────────────────────────────────────────────────────────
@@ -232,10 +243,12 @@ with tab2:
                         insert_output(trend_id, "design_prompt", dp)
 
                         listing = generate_etsy_listing(selected_phrase, niche, client)
-                        insert_output(trend_id, "etsy_listing", json.dumps(listing, ensure_ascii=False))
+                        # listing is an EtsyListingOutput model
+                        insert_output(trend_id, "etsy_listing", json.dumps(listing.model_dump(), ensure_ascii=False))
 
                         social = generate_social_content(selected_phrase, niche, client)
-                        insert_output(trend_id, "social_content", json.dumps(social, ensure_ascii=False))
+                        # social is a SocialContentOutput model
+                        insert_output(trend_id, "social_content", json.dumps(social.model_dump(), ensure_ascii=False))
 
                         st.success("✓ İçerik üretildi!")
                         st.rerun()
@@ -302,3 +315,44 @@ with tab3:
             )
         else:
             st.caption("Export için önce içerik üret (skor >= 7.5).")
+
+
+# ── TAB 4: Sistem İzleme ──────────────────────────────────────────────────────
+with tab4:
+    st.subheader("Sistem Günlüğü (pipeline.log)")
+    
+    log_file = "pipeline.log"
+    if os.path.exists(log_file):
+        with open(log_file, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+            
+        # Son 100 satır
+        last_lines = lines[-100:] if len(lines) > 100 else lines
+        last_lines.reverse() # En yeni en üstte
+        
+        for line in last_lines:
+            if "[ERROR]" in line:
+                st.error(line.strip())
+            elif "[WARNING]" in line:
+                st.warning(line.strip())
+            elif "[INFO]" in line:
+                st.text(line.strip())
+            else:
+                st.caption(line.strip())
+                
+        if st.button("🗑️ Logları Temizle"):
+             with open(log_file, "w") as f:
+                 f.write(f"{pd.Timestamp.now()} [INFO] Loglar kullanıcı tarafından temizlendi.\n")
+             st.rerun()
+    else:
+        st.info("Henüz log dosyası oluşmamış. Pipeline çalıştığında burada görünecek.")
+
+    st.divider()
+    st.subheader("Sunucu Durumu")
+    c1, c2 = st.columns(2)
+    with c1:
+        st.write(f"**Python Versiyonu:** `{sys.version.split()[0]}`")
+        st.write(f"**Çalışma Dizini:** `{os.getcwd()}`")
+    with c2:
+        st.write(f"**Dashboard Saati:** `{pd.Timestamp.now().strftime('%H:%M:%S')}`")
+        st.write(f"**Veritabanı Modu:** `PostgreSQL`")

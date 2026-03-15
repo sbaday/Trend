@@ -79,6 +79,48 @@ def get_trending_rss(geo='US') -> list[str]:
         print(f"  RSS Fetch Hatası: {e}")
         return []
 
+def get_related_signals(pytrends=None, verbose: bool = True) -> int:
+    """
+    Belirli tohum (seed) kelimeler üzerinden yükselen ve popüler ilgili sorguları çeker.
+    """
+    if pytrends is None: pytrends = build_client()
+    
+    # Keşif için kullanılacak tohum kelimeler (jenerik POD & trend odaklı)
+    seeds = ["t-shirt design", "gift ideas", "viral trends", "aesthetic", "funny quotes"]
+    
+    count = 0
+    if verbose:
+        print(f"  → Google Related Queries ({GEO}) taranıyor...", end=" ", flush=True)
+
+    for kw in seeds:
+        try:
+            pytrends.build_payload([kw], timeframe=TIMEFRAME, geo=GEO)
+            related = pytrends.related_queries()
+            
+            if kw in related:
+                # 1. Rising Queries
+                rising = related[kw]['rising']
+                if rising is not None and not rising.empty:
+                    for query in rising['query'].tolist():
+                        insert_signal(source="google_trends", subsource="related_queries_rising", raw_title=query, engagement=50)
+                        count += 1
+                
+                # 2. Top Queries
+                top = related[kw]['top']
+                if top is not None and not top.empty:
+                    for query in top['query'].tolist():
+                        insert_signal(source="google_trends", subsource="related_queries_top", raw_title=query, engagement=30)
+                        count += 1
+                        
+            time.sleep(random.uniform(1.5, 3.0)) # Rate-limit jitter
+        except Exception as e:
+            if verbose: print(f"\n    [!] {kw} için hata: {e}")
+            continue
+
+    if verbose:
+        print(f"{count} yeni ilgili sorgu sinyali kaydedildi.")
+    return count
+
 def discover_and_save(verbose: bool = True) -> int:
     init_db()
     pytrends = build_client()
@@ -103,6 +145,10 @@ def discover_and_save(verbose: bool = True) -> int:
     
     if verbose:
         print(f"{count} viral sinyal kaydedildi.")
+
+    # V2: Related queries keşfi (Story 1.3)
+    count += get_related_signals(pytrends, verbose)
+    
     return count
 
 def update_google_interest(verbose: bool = True) -> int:

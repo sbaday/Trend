@@ -39,6 +39,9 @@ data/*.sqlite3
 # Streamlit
 .streamlit/
 
+# Logs
+*.log
+
 # IDEs
 .vscode/
 .idea/

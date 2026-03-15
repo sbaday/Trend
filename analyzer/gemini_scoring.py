@@ -28,7 +28,7 @@ from validation.momentum import hybrid_validate
 load_dotenv()
 
 SCORE_THRESHOLD = 7.0
-MODEL = "gemini-2.5-flash"
+MODEL = "gemini-flash-latest"
 
 PROMPTS_DIR = os.path.join(os.path.dirname(__file__), "..", "prompts")
 with open(os.path.join(PROMPTS_DIR, "scoring_system.md"), "r", encoding="utf-8") as f:

@@ -10,4 +10,4 @@ Score each dimension 1-10:
 - giftability: Is it a good gift for someone in this niche?
 - design_simplicity: Can this be turned into a simple, clean design in under 10 minutes?
 
-Also suggest a niche category (e.g. "outdoor", "fitness", "pets", "funny", "wellness").
+Also select the best strategic niche from this list: [Pets, Fitness, Gaming, Funny, Occupation, Hobby, Family, Holiday, Aesthetic, Politics, Crypto, General].
