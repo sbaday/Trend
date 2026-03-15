@@ -30,10 +30,19 @@ def collect(verbose: bool = True) -> int:
         for ep, base_engagement in endpoints:
             url = f"https://www.reddit.com/r/{sub}/{ep}"
             # User-Agent eklemek kritik, yoksa Reddit bot olarak görüp boş döner veya 403 verir
+            # User-Agent eklemek kritik, yoksa Reddit bot olarak görüp boş döner veya 403 verir
             feed = feedparser.parse(url, agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')
             
+            status = getattr(feed, 'status', 'Unknown')
+            entries_count = len(feed.entries)
+
             if verbose:
-                print(f"  [Reddit RSS] r/{sub}/{ep.split('/')[0]} taranıyor...")
+                print(f"  [Reddit RSS] r/{sub}/{ep.split('/')[0]} -> Status: {status} | Bulunan: {entries_count}")
+
+            if status == 403:
+                print(f"  ⚠️ [Reddit] 403 Forbidden! User-Agent engellenmiş olabilir.")
+            elif status == 429:
+                print(f"  ⚠️ [Reddit] 429 Rate Limit! Çok sık deniyoruz.")
 
             # Rising endpoint'leri daha az sonuç verebilir, normaldir
             for entry in feed.entries[:15]:
@@ -41,11 +50,8 @@ def collect(verbose: bool = True) -> int:
                 link = entry.link
                 
                 # Sinyal kalitesini endpoint sırasına göre dummy olarak ağırlıklandıralım
-                # (İleride comment veya upvote parse edilirse gerçek data konabilir)
                 engagement = base_engagement 
                 
-                # Database zaten tüm sinyalleri farklı captured_at (veya uuid) ile
-                # çoklu zaman serisi momentumu yaratacaktır.
                 insert_signal(source="reddit_rss", subsource=f"r/{sub}", raw_title=title, url=link, engagement=engagement)
                 total_collected += 1
             
