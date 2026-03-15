@@ -28,7 +28,7 @@ def init_db():
     conn = get_connection()
     cur = conn.cursor()
     
-    # 1. Ham Sinyaller
+    # 1. Ham Sinyaller (Migration: processed sütunu ekle)
     cur.execute("""
         CREATE TABLE IF NOT EXISTS signals (
             id              SERIAL PRIMARY KEY,
@@ -41,6 +41,7 @@ def init_db():
             captured_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
+    cur.execute("ALTER TABLE signals ADD COLUMN IF NOT EXISTS processed BOOLEAN DEFAULT FALSE")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_signals_source ON signals(source)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_signals_title ON signals(raw_title)")
 

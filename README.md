@@ -31,24 +31,29 @@ GEMINI_API_KEY=AIza...   # https://aistudio.google.com/apikey
 ### 3. Çalıştır
 
 ```bash
-# Tek seferde tüm pipeline
+# Tek seferde tüm pipeline (Collect -> Extract -> Analyze -> Generate)
 python run_pipeline.py
 
 # Veya adım adım
 python run_pipeline.py --collect   # Veri topla (Reddit + HN + Google Trends)
 python run_pipeline.py --extract   # Ham veriyi phrase'lere çevir (TF-IDF)
-python run_pipeline.py --analyze   # Gemini ile skora
+python run_pipeline.py --analyze   # Gemini ile skorla
 python run_pipeline.py --generate  # Etsy listing + tasarım promptu üret
 
-# Otomatik haftalık zamanlayıcı
+# Otonom Zamanlayıcı (Şu an aktif: Her 2 saatte bir full döngü)
 python run_pipeline.py --schedule
 ```
 
-### 4. Dashboard
+### 4. Dashboard (Komuta Merkezi)
 
 ```bash
 streamlit run ui/streamlit_app.py
 ```
+
+- **Trend Feed:** Skorlanan trendleri filtrele ve incele.
+- **Ürün Üretici:** Seçili trend için anında Etsy listing ve Tasarım promptu üret.
+- **Haftalık Rapor:** Niş ve skor dağılımı grafiklerini incele, Etsy CSV export al.
+- **Sistem İzleme:** Canlı logları (`pipeline.log`) takip et ve sunucu durumunu gör.
 
 ---
 
@@ -56,61 +61,48 @@ streamlit run ui/streamlit_app.py
 
 ```
 Trend/
-├── collectors/
-│   ├── reddit_rss.py          # Reddit RSS (rising + hot + top, API key gerektirmez)
-│   ├── hackernews.py          # HackerNews Firebase API
-│   ├── google_trends.py       # pytrends — related queries keşfi
-│   └── pinterest_collector.py # Pinterest (şimdilik pasif, 403 sorunu)
-├── extraction/
-│   └── phrase_extractor.py    # TF-IDF ile n-gram phrase çıkarımı
-├── analyzer/
-│   └── gemini_scoring.py      # Gemini ile POD potansiyeli puanlama
-├── generator/
-│   ├── generators.py          # Etsy listing + tasarım promptu + sosyal içerik
-│   └── printify_api.py        # Printify draft oluşturucu (opsiyonel)
-├── db/
-│   └── database.py            # SQLite V2 şeması ve CRUD
-├── prompts/                   # Dışsal AI prompt şablonları (.md)
 ├── ui/
-│   └── streamlit_app.py       # Dashboard
-├── models.py                  # Pydantic veri modelleri
-├── run_pipeline.py            # Ana orkestratör
-└── data/trends_v2.db          # SQLite (otomatik oluşur)
+│   └── streamlit_app.py       # Çok sekmeli gelişmiş Dashboard
+├── db/
+│   └── database.py            # PostgreSQL (Railway) entegrasyonu
+├── generator/
+│   └── generators.py          # AI içerik üretim motoru (Pydantic destekli)
+├── tests/                     # Doğrulama testleri
+├── run_pipeline.py            # Ana orkestratör & APScheduler (2h interval)
+├── pipeline.log               # Tüm süreçlerin kalıcı kayıtları
+└── .env                       # API anahtarları ve DB URL (Git-ignored)
 ```
 
 ---
 
-## 🗓 Haftalık Otomatik Zamanlama (`--schedule`)
+## 🗓 Otonom Zamanlama (`--schedule`)
 
-| Gün | İş |
-|---|---|
-| Pazartesi, Salı, Perşembe | Veri toplama + phrase extraction |
-| Cuma | Gemini scoring + listing üretimi |
+Sistem `APScheduler` kullanarak şu takvimle çalışır:
+
+- **Her 2 Saatte Bir:** Tam veri akışı (Toplama + Çıkarma + Analiz + Üretim).
+- **Her Gün 04:00:** Momentum Engine (Viral Doğrulama ve Trend Tazeleme).
+- **Hata Yönetimi:** Her adım `try-except` blokları ve `logging` ile korunur.
 
 ---
 
-## 📊 Skor Sistemi (Gemini)
+## 📊 Skor Sistemi (Gemini 2.0 Flash)
 
 ```
 ai_score = humor×0.35 + identity×0.25 + giftability×0.25 + design×0.15
 ```
 
-| Skor | Karar |
-|---|---|
-| 8.0+ | 🔥 Hemen üret |
-| 7.0–7.9 | 🟡 Üret, test et |
-| < 7.0 | ⏭️ Atla |
+| Skor | Karar | Aksiyon |
+|---|---|---|
+| 8.0+ | 🔥 Kritik | Hemen tasarıma ve mağazaya yükle. |
+| 7.0–7.9 | 🟡 Potansiyel | Varyasyonlarla test et. |
+| < 7.0 | ⏭️ Zayıf | Veritabanında sakla ama üretme. |
 
 ---
 
-## 🗄 Veritabanı Şeması (V2)
+## 🗄 Veritabanı ve Loglama
 
-```
-signals       → Ham sinyaller (Reddit, HN, Google Trends)
-trends        → Normalize phrase'ler + AI skorları
-trend_signals → Zaman serisi (momentum hesabı için)
-outputs       → Etsy listing, tasarım promptu, sosyal içerik (JSON)
-```
+- **PostgreSQL:** Railway üzerinde barındırılır, `DATABASE_URL` ile bağlanılır.
+- **Logging:** `pipeline.log` dosyası tüm döngülerin başarısını ve hatalarını saklar, Dashboard üzerinden izlenebilir.
 
 ---
 
