@@ -57,7 +57,7 @@ def run_collect():
 
 def run_extract():
     header("ADIM 2/4 — Veri Çıkarımı (Phrase Extraction)")
-    from db.database import get_unprocessed_signals, upsert_trend
+    from db.database import get_unprocessed_signals, upsert_trend, mark_signals_processed
     from extraction.phrase_extractor import extract_phrases_tfidf
     
     rows = get_unprocessed_signals(limit=500)
