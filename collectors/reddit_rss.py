@@ -29,7 +29,8 @@ def collect(verbose: bool = True) -> int:
     for sub in SUBREDDITS:
         for ep, base_engagement in endpoints:
             url = f"https://www.reddit.com/r/{sub}/{ep}"
-            feed = feedparser.parse(url)
+            # User-Agent eklemek kritik, yoksa Reddit bot olarak görüp boş döner veya 403 verir
+            feed = feedparser.parse(url, agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')
             
             if verbose:
                 print(f"  [Reddit RSS] r/{sub}/{ep.split('/')[0]} taranıyor...")

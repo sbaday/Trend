@@ -39,10 +39,10 @@ def run_collect():
     nh = collect_hn(verbose=True)
     print(f"  Toplam: {nh} sinyal")
 
-    print("\n[Pinterest]")
-    from collectors.pinterest_collector import collect as collect_pinterest
-    np = collect_pinterest(verbose=True)
-    print(f"  Toplam: {np} sinyal")
+    # print("\n[Pinterest]")
+    # from collectors.pinterest_collector import collect as collect_pinterest
+    # np = collect_pinterest(verbose=True)
+    # print(f"  Toplam: {np} sinyal")
 
     print("\n[Google Trends]")
     from collectors.google_trends import discover_and_save, update_google_interest
