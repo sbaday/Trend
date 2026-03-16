@@ -19,16 +19,16 @@ from dotenv import load_dotenv
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from models import EtsyListingOutput, SocialContentOutput
 from db.database import init_db, insert_output, get_top_trends, get_outputs_for_trend
+from config.loader import config
 try:
     from generator.printify_api import create_product_draft
 except ImportError:
-    # Fallback to local import if run as standalone inside generator directory
     from printify_api import create_product_draft
 
 load_dotenv()
 
 MODEL = "gemini-flash-latest"
-SCORE_THRESHOLD = 7.0
+SCORE_THRESHOLD = config.get('scoring', {}).get('threshold', 7.0)
 
 
 PROMPTS_DIR = os.path.join(os.path.dirname(__file__), "..", "prompts")

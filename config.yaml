@@ -1,0 +1,42 @@
+# POD Trend Engine V2 — Merkezi Yapılandırma
+# Bu dosyadaki değerleri kodu değiştirmeden güncelleyebilirsiniz.
+# Hassas bilgiler (API Key, DB URL) .env dosyasında kalır.
+
+# ──────────────────────────────────────────
+# Zamanlayıcı
+# ──────────────────────────────────────────
+scheduler:
+  full_cycle_interval_hours: 2
+  momentum_engine_time: "04:00"
+
+# ──────────────────────────────────────────
+# Skor Sistemi
+# ──────────────────────────────────────────
+scoring:
+  threshold: 7.0
+  weights:
+    humor: 0.35
+    identity: 0.25
+    giftability: 0.25
+    design: 0.15
+
+# ──────────────────────────────────────────
+# Analiz
+# ──────────────────────────────────────────
+analysis:
+  default_limit: 40
+  min_mentions: 3
+
+# ──────────────────────────────────────────
+# Veri Kaynakları
+# ──────────────────────────────────────────
+sources:
+  google_trends:
+    geo: "US"
+    timeframe: "now 7-d"
+    rate_limit_delay_min: 2.0
+    rate_limit_delay_max: 4.5
+  reddit:
+    enabled: true
+  hackernews:
+    enabled: true

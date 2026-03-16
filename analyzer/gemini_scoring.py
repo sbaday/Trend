@@ -24,10 +24,13 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from db.database import init_db, get_unanalyzed, update_scores
 from models import ScoringOutput
 from validation.momentum import hybrid_validate
+from config.loader import config
 
 load_dotenv()
 
-SCORE_THRESHOLD = 7.0
+_scoring_cfg   = config.get('scoring', {})
+SCORE_THRESHOLD = _scoring_cfg.get('threshold', 7.0)
+_weights        = _scoring_cfg.get('weights', {})
 MODEL = "gemini-flash-latest"
 
 PROMPTS_DIR = os.path.join(os.path.dirname(__file__), "..", "prompts")
@@ -38,7 +41,14 @@ with open(os.path.join(PROMPTS_DIR, "scoring_user.md"), "r", encoding="utf-8") a
     USER_TEMPLATE = f.read()
 
 def compute_score(humor: float, identity: float, giftability: float, design: float) -> float:
-    return round(humor * 0.35 + identity * 0.25 + giftability * 0.25 + design * 0.15, 2)
+    w = _weights
+    return round(
+        humor       * w.get('humor', 0.35) +
+        identity    * w.get('identity', 0.25) +
+        giftability * w.get('giftability', 0.25) +
+        design      * w.get('design', 0.15),
+        2
+    )
 
 
 def analyze_batch(verbose: bool = True, min_mentions: int = 3, limit: int = 40) -> int:

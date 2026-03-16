@@ -17,13 +17,17 @@ from dotenv import load_dotenv
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from db.database import init_db, insert_signal, get_connection
+from config.loader import config
 
 load_dotenv()
 
 PN = 'united_states'
-GEO = 'US'
-TIMEFRAME = "now 7-d"
 HL = "en-US"
+_gt_cfg = config.get('sources', {}).get('google_trends', {})
+GEO       = _gt_cfg.get('geo', 'US')
+TIMEFRAME = _gt_cfg.get('timeframe', 'now 7-d')
+_DELAY_MIN = _gt_cfg.get('rate_limit_delay_min', 2.0)
+_DELAY_MAX = _gt_cfg.get('rate_limit_delay_max', 4.5)
 
 def build_client():
     return TrendReq(hl=HL, tz=360, timeout=(10, 25), retries=2, backoff_factor=0.5)
@@ -112,7 +116,7 @@ def get_related_signals(pytrends=None, verbose: bool = True) -> int:
                         insert_signal(source="google_trends", subsource="related_queries_top", raw_title=query, engagement=30)
                         count += 1
                         
-            time.sleep(random.uniform(2.0, 4.5)) # Slightly longer wait
+            time.sleep(random.uniform(_DELAY_MIN, _DELAY_MAX))
         except Exception as e:
             if "429" in str(e):
                 if verbose: print(f"\n    [!] Google Rate Limit (429) yakalandı. Diğer kelimeler atlanıyor.")

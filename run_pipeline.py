@@ -20,8 +20,12 @@ import argparse
 import os
 from datetime import datetime
 from dotenv import load_dotenv
+from config.loader import config
 
 load_dotenv()
+
+_sched_cfg    = config.get('scheduler', {})
+_analysis_cfg = config.get('analysis', {})
 
 
 def header(text: str):
@@ -94,12 +98,14 @@ def run_extract():
     print(f"  Toplam: {saved} sinyal tişört trendlerine (phrase) çıkarıldi.")
 
 
-def run_analyze(limit: int = 40, min_mentions: int = 3):
+def run_analyze(limit: int = None, min_mentions: int = None):
     header("ADIM 3/4 — Gemini Analizi")
     from analyzer.gemini_scoring import analyze_batch
     # Gürültü filtresi: varsayılan 3 kez görülmüş phrase'leri gönder
-    # Limit: varsayılan 40 trend
-    n = analyze_batch(verbose=True, min_mentions=min_mentions, limit=limit)
+    # Limit: varsayılan 40 trend (config'den okunur)
+    _limit = limit if limit is not None else _analysis_cfg.get('default_limit', 40)
+    _mentions = min_mentions if min_mentions is not None else _analysis_cfg.get('min_mentions', 3)
+    n = analyze_batch(verbose=True, min_mentions=_mentions, limit=_limit)
     print(f"\n  Toplam analiz: {n} trend")
 
 
@@ -172,11 +178,16 @@ def run_schedule():
         except Exception as e:
             logging.error(f"Momentum doğrulaması sırasında hata: {e}")
         
-    # Her 2 saatte bir -> collect + extract + analyze + generate
-    scheduler.add_job(job_full_cycle, 'interval', hours=2)
+    # Scheduler interval'i config'den al
+    _interval_hours = _sched_cfg.get('full_cycle_interval_hours', 2)
+    _momentum_time  = _sched_cfg.get('momentum_engine_time', '04:00')
+    _m_hour, _m_min = [int(x) for x in _momentum_time.split(':')]
+
+    # Her N saatte bir -> collect + extract + analyze + generate
+    scheduler.add_job(job_full_cycle, 'interval', hours=_interval_hours)
     
-    # Her gün sabaha karşı 04:00 -> Momentum Doğrulama
-    scheduler.add_job(job_momentum_check, 'cron', hour=4, minute=0)
+    # Her gün momentum kontrolü
+    scheduler.add_job(job_momentum_check, 'cron', hour=_m_hour, minute=_m_min)
     
     logging.info("Zamanlayıcı MODÜLER ve DAYANIKLI modda.")
     logging.info("- Her 2 saatte bir: Full Pipeline (ADIM 1-4)")

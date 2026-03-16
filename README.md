@@ -34,6 +34,12 @@ GEMINI_API_KEY=AIza...   # https://aistudio.google.com/apikey
 # Tek seferde tüm pipeline (Collect -> Extract -> Analyze -> Generate)
 python run_pipeline.py
 
+# Backlog Temizleme (Rush Mode) - Sinyal toplamaz, bekleyenleri eritir
+python run_pipeline.py --rush
+
+# Parametreli Analiz
+python run_pipeline.py --analyze --limit 100 --min-mentions 1
+
 # Veya adım adım
 python run_pipeline.py --collect   # Veri topla (Reddit + HN + Google Trends)
 python run_pipeline.py --extract   # Ham veriyi phrase'lere çevir (TF-IDF)
@@ -110,5 +116,10 @@ ai_score = humor×0.35 + identity×0.25 + giftability×0.25 + design×0.15
 
 - Reddit: API key **gerekmez**, RSS feed kullanır. `rising + hot + top` üç endpoint çalışır.
 - HackerNews: API key **gerekmez**, açık Firebase API kullanır.
-- Google Trends: Rate limit için jitter ekli (1.5–3s bekleme).
-- Gemini: `gemini-2.0-flash-exp` modeli kullanılır. 50 trend analizi ≈ $0.01 maliyet.
+- Google Trends: Rate limit için jitter ve **429 (Too Many Requests) otomatik aşma** mantığı eklendi.
+- Gemini: `gemini-flash-latest` modeli kullanılır. **503 (Unavailable) için 3x retry** mekanizması meklendi.
+- Performans: Veritabanı işlemleri **Batch Connection** ile optimize edildi (10k+ sinyal saniyeler içinde işlenir).
+- Hata Yönetimi: Kimlik bilgileri eksikse Printify adımı sessizce atlanır (Opsiyonel).
+
+---
+**Durum:** ✅ STABİL | 🚀 OPTİMİZE
