@@ -100,7 +100,12 @@ def init_db():
             last_updated    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
-    
+    # ── V2.1 Migrations: Sentiment & Longevity ───────────────────────────────
+    cur.execute("ALTER TABLE trends ADD COLUMN IF NOT EXISTS sentiment_score REAL DEFAULT 0.0")
+    cur.execute("ALTER TABLE trends ADD COLUMN IF NOT EXISTS longevity_days  INTEGER DEFAULT 0")
+    cur.execute("ALTER TABLE signals ADD COLUMN IF NOT EXISTS first_seen_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    cur.execute("ALTER TABLE signals ADD COLUMN IF NOT EXISTS last_seen_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+
     conn.commit()
     cur.close()
     conn.close()
@@ -109,11 +114,18 @@ def init_db():
 # ── V2 Veritabanı API ────────────────────────────────────────────────────────
 
 def insert_signal(source: str, raw_title: str, subsource: str = None, url: str = None, engagement: int = 0):
+    """Sinyal ekler. Daha önce eklendiyse last_seen_at günceller."""
     conn = get_connection()
     cur = conn.cursor()
+    now = datetime.utcnow()
+    # Duplicate raw_title kaydı olmaması için: aynı title varsa sadece last_seen_at güncelle
     cur.execute(
-        "INSERT INTO signals (source, subsource, raw_title, url, engagement) VALUES (%s, %s, %s, %s, %s) RETURNING id",
-        (source, subsource, raw_title, url, engagement)
+        """
+        INSERT INTO signals (source, subsource, raw_title, url, engagement, first_seen_at, last_seen_at)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        RETURNING id
+        """,
+        (source, subsource, raw_title, url, engagement, now, now)
     )
     sig_id = cur.fetchone()[0]
     conn.commit()
@@ -146,6 +158,7 @@ def upsert_trend(normalized_phrase: str, platform: str, engagement: int, cur=Non
     """
     Trend tablosuna yazar veya günceller. 
     Batch işlemler için dışarıdan 'cur' (cursor) kabul eder.
+    Yeni trendlerde otomatik olarak sentiment_score hesaplar.
     """
     external_cur = cur is not None
     conn = None
@@ -158,19 +171,27 @@ def upsert_trend(normalized_phrase: str, platform: str, engagement: int, cur=Non
     
     try:
         # 1. Trend Bul veya Yarat
-        cur.execute("SELECT id FROM trends WHERE normalized_phrase = %s", (normalized_phrase,))
+        cur.execute("SELECT id, first_seen FROM trends WHERE normalized_phrase = %s", (normalized_phrase,))
         existing = cur.fetchone()
         
         if existing:
-            trend_id = existing[0]
+            trend_id, first_seen = existing
+            longevity = (now - first_seen).days if first_seen else 0
             cur.execute(
-                "UPDATE trends SET last_seen = %s, total_mentions = total_mentions + 1 WHERE id = %s",
-                (now, trend_id)
+                "UPDATE trends SET last_seen = %s, total_mentions = total_mentions + 1, longevity_days = %s WHERE id = %s",
+                (now, longevity, trend_id)
             )
         else:
+            # Sentiment: yeni phrase için hesapla
+            try:
+                from analyzer.sentiment import score_sentiment
+                sentiment = score_sentiment(normalized_phrase)
+            except Exception:
+                sentiment = 0.0
+
             cur.execute(
-                "INSERT INTO trends (normalized_phrase, first_seen, last_seen, total_mentions) VALUES (%s, %s, %s, 1) RETURNING id",
-                (normalized_phrase, now, now)
+                "INSERT INTO trends (normalized_phrase, first_seen, last_seen, total_mentions, sentiment_score, longevity_days) VALUES (%s, %s, %s, 1, %s, 0) RETURNING id",
+                (normalized_phrase, now, now, sentiment)
             )
             trend_id = cur.fetchone()[0]
             

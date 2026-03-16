@@ -1,0 +1,28 @@
+# ── Proje Klasörleri ──────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# ── Geliştirme Araçları ───────────────────────────────────────────────────────
+.git/
+.gitignore
+.venv/
+venv/
+.env
+
+# ── Proje Özel ───────────────────────────────────────────────────────────────
+pipeline.log
+*.log
+data/
+tests/
+_bmad/
+_bmad-output/
+docs/
+
+# ── macOS ────────────────────────────────────────────────────────────────────
+.DS_Store

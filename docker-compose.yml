@@ -1,0 +1,74 @@
+version: '3.8'
+
+# ──────────────────────────────────────────────────────────────────────────────
+# POD Trend Engine V2 — Yerel Geliştirme Ortamı
+# Not: Üretim (Production) için Railway kullanılır.
+# Bu dosya sadece LOKAL geliştirme/test içindir.
+#
+# Kullanım:
+#   docker-compose up --build   # İlk kez veya kod değişikliğinde
+#   docker-compose up -d        # Arka planda başlat
+#   docker-compose down         # Durdur
+# ──────────────────────────────────────────────────────────────────────────────
+
+services:
+  # ── Ana Pipeline Uygulaması ────────────────────────────────────────────────
+  app:
+    build: .
+    container_name: trend_engine_app
+    env_file:
+      - .env
+    environment:
+      # Lokal geliştirmede Railway DATABASE_URL yerine yerel DB kullan
+      - DATABASE_URL=postgresql://trenduser:trendpass@db:5432/trenddb
+    volumes:
+      # Kod değişikliklerini anında yansıtır (hot reload için)
+      - .:/app
+      # Log dosyasını ana makinede sakla
+      - ./pipeline.log:/app/pipeline.log
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── Streamlit Dashboard ───────────────────────────────────────────────────
+  dashboard:
+    build: .
+    container_name: trend_engine_dashboard
+    command: streamlit run ui/streamlit_app.py --server.port=8501 --server.address=0.0.0.0
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://trenduser:trendpass@db:5432/trenddb
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── Yerel PostgreSQL (Geliştirme için) ────────────────────────────────────
+  db:
+    image: postgres:15-alpine
+    container_name: trend_engine_db
+    environment:
+      - POSTGRES_USER=trenduser
+      - POSTGRES_PASSWORD=trendpass
+      - POSTGRES_DB=trenddb
+    volumes:
+      # Veritabanı verisi kalıcı olsun
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      # Yerel makineden doğrudan bağlanmak için (isteğe bağlı)
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trenduser -d trenddb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
