@@ -15,6 +15,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Proje dosyalarını kopyala
 COPY . .
 
+# Modüllerin doğru bulunması için PYTHONPATH ekle
+ENV PYTHONPATH=/app
+
 # Güvenlik: root olmayan kullanıcıyla çalış
 RUN useradd -m appuser && chown -R appuser:appuser /app
 USER appuser
