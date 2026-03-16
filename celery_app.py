@@ -51,10 +51,8 @@ if "@" in broker_url:
 print(f"  [Celery] Broker URL: {safe_url}")
 
 # Uygulama başlatma
-# Backend'i (result_backend) opsiyonel yapıyoruz. 
-# Pipeline adımları için sonuçları veritabanına yazdığımızdan 
-# Celery'nin bir de sonuç mağazasına bağlanması zorunlu değil (daha az hata noktası).
-app = Celery('trend_engine', broker=broker_url)
+# include=['tasks'] ekleyerek worker'ın görevleri tanımasını sağlıyoruz.
+app = Celery('trend_engine', broker=broker_url, include=['tasks'])
 
 app.conf.update(
     task_serializer='json',
