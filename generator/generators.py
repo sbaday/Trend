@@ -138,8 +138,11 @@ def run_output_pipeline(verbose: bool = True) -> int:
                     insert_output(trend_id, "printify_draft", json.dumps(draft_res, ensure_ascii=False))
                     if verbose:
                         print(f"     ✓ Printify Draft oluşturuldu")
-                elif draft_res and verbose:
+                elif draft_res and draft_res.get("status") == "error" and verbose:
                     print(f"     ✗ Printify Warning: {draft_res.get('message')}")
+                elif draft_res and draft_res.get("status") == "deactivated" and verbose:
+                    # Sessizce atla veya sadece ilk kez logla
+                    pass
             except Exception as pe:
                 if verbose:
                     print(f"     ✗ Printify HATA: {pe}")

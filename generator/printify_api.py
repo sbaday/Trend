@@ -22,7 +22,7 @@ def create_product_draft(title: str, description: str, tags: list, blueprint_id=
     Gerçek görseller gelene kadar placeholder bir tasarım yapısı kullanılır.
     """
     if not API_TOKEN or not SHOP_ID:
-        return None  # Token yoksa sessizce atla
+        return {"status": "deactivated", "message": "PRINTIFY_API_TOKEN or PRINTIFY_SHOP_ID missing"}
 
     headers = {
         "Authorization": f"Bearer {API_TOKEN}",
