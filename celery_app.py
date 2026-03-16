@@ -3,29 +3,58 @@ Celery Uygulaması
 -----------------
 Redis broker üzerinde görev kuyruğu yapılandırması.
 
-Başlatma:
-    celery -A celery_app worker --loglevel=info --concurrency=2
+Geliştirmeler:
+- Sonuç backend'i (result backend) varsayılan olarak devre dışı (daha dayanıklı).
+- Railway'de REDIS_URL yoksa otomatik senkron fallback için daha temiz loglama.
+- Docker dışı (local) çalıştırmalar için localhost desteği.
 """
 
 import os
+import logging
 from celery import Celery
 from dotenv import load_dotenv
 
 load_dotenv()
 
-# Öncelik: REDIS_URL (Railway/Docker env) > config.yaml > default
-_env_redis = os.getenv('REDIS_URL')
+logger = logging.getLogger(__name__)
 
-try:
-    from config.loader import config as _cfg
-    _cel = _cfg.get('celery', {})
-    broker_url  = _env_redis or _cel.get('broker_url',  'redis://redis:6379/0')
-    backend_url = _env_redis or _cel.get('backend_url', 'redis://redis:6379/1')
-except Exception:
-    broker_url  = _env_redis or 'redis://redis:6379/0'
-    backend_url = _env_redis or 'redis://redis:6379/1'
+def get_redis_url():
+    # 1. Öncelik: Sistem ortam değişkeni (Railway/Docker env)
+    env_url = os.getenv('REDIS_URL')
+    if env_url:
+        return env_url
 
-app = Celery('trend_engine', broker=broker_url, backend=backend_url)
+    # 2. Öncelik: config.yaml
+    try:
+        from config.loader import config as _cfg
+        conf_url = _cfg.get('celery', {}).get('broker_url')
+        if conf_url and "redis" in conf_url:
+            # Eğer docker dışında isek ve 'redis' hostu varsa 'localhost'a çevir
+            if "redis:6379" in conf_url and not os.path.exists("/.dockerenv"):
+                return conf_url.replace("redis:6379", "localhost:6379")
+            return conf_url
+    except Exception:
+        pass
+
+    # 3. Öncelik: Güvenli varsayılanlar
+    if os.path.exists("/.dockerenv"):
+        return 'redis://redis:6379/0'
+    return 'redis://localhost:6379/0'
+
+broker_url = get_redis_url()
+
+# URL'yi logla (şifreyi gizleyerek)
+safe_url = broker_url
+if "@" in broker_url:
+    parts = broker_url.split("@")
+    safe_url = f"redis://****@{parts[1]}"
+print(f"  [Celery] Broker URL: {safe_url}")
+
+# Uygulama başlatma
+# Backend'i (result_backend) opsiyonel yapıyoruz. 
+# Pipeline adımları için sonuçları veritabanına yazdığımızdan 
+# Celery'nin bir de sonuç mağazasına bağlanması zorunlu değil (daha az hata noktası).
+app = Celery('trend_engine', broker=broker_url)
 
 app.conf.update(
     task_serializer='json',
@@ -34,7 +63,9 @@ app.conf.update(
     timezone='UTC',
     enable_utc=True,
     task_track_started=True,
-    # Görev başarısız olursa 60s bekle ve 3 kez tekrar dene
     task_acks_late=True,
     worker_prefetch_multiplier=1,
+    # Sonuçları saklama (Hata olasılığını azaltır)
+    task_ignore_result=True,
+    result_backend=None
 )
