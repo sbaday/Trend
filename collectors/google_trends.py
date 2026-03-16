@@ -112,8 +112,11 @@ def get_related_signals(pytrends=None, verbose: bool = True) -> int:
                         insert_signal(source="google_trends", subsource="related_queries_top", raw_title=query, engagement=30)
                         count += 1
                         
-            time.sleep(random.uniform(1.5, 3.0)) # Rate-limit jitter
+            time.sleep(random.uniform(2.0, 4.5)) # Slightly longer wait
         except Exception as e:
+            if "429" in str(e):
+                if verbose: print(f"\n    [!] Google Rate Limit (429) yakalandı. Diğer kelimeler atlanıyor.")
+                break # Stop the seeds loop for this run
             if verbose: print(f"\n    [!] {kw} için hata: {e}")
             continue
 

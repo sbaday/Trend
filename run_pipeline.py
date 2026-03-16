@@ -94,11 +94,12 @@ def run_extract():
     print(f"  Toplam: {saved} sinyal tişört trendlerine (phrase) çıkarıldi.")
 
 
-def run_analyze():
+def run_analyze(limit: int = 40, min_mentions: int = 3):
     header("ADIM 3/4 — Gemini Analizi")
     from analyzer.gemini_scoring import analyze_batch
-    # Gürültü filtresi: en az 3 kez görülmüş phrase'leri gönder
-    n = analyze_batch(verbose=True, min_mentions=3)
+    # Gürültü filtresi: varsayılan 3 kez görülmüş phrase'leri gönder
+    # Limit: varsayılan 40 trend
+    n = analyze_batch(verbose=True, min_mentions=min_mentions, limit=limit)
     print(f"\n  Toplam analiz: {n} trend")
 
 
@@ -198,8 +199,10 @@ def main():
     parser.add_argument("--collect",  action="store_true", help="Sadece veri toplama")
     parser.add_argument("--extract",  action="store_true", help="Sadece çıkarım")
     parser.add_argument("--analyze",  action="store_true", help="Sadece analiz")
-    parser.add_argument("--generate", action="store_true", help="Sadece output üretimi")
     parser.add_argument("--schedule", action="store_true", help="Zamanlayıcıyı başlatır")
+    parser.add_argument("--limit",    type=int, default=40, help="Gemini batch limiti")
+    parser.add_argument("--min-mentions", type=int, default=3, help="Minimum mention eşiği")
+    parser.add_argument("--rush",     action="store_true", help="Backlog temizleme modu (sadece extract+analyze)")
     args = parser.parse_args()
 
     start = datetime.now()
@@ -207,6 +210,13 @@ def main():
 
     if args.schedule:
         run_schedule()
+        return
+
+    if args.rush:
+        header("RUSH MODE — Backlog Temizleniyor")
+        run_extract()
+        # Rush mode uses a larger batch if user confirms, or just 100 for safety
+        run_analyze(limit=min(args.limit * 2, 100), min_mentions=args.min_mentions)
         return
 
     # Hiç bayrak yoksa full pipeline
@@ -217,7 +227,7 @@ def main():
     if full or args.extract:
         run_extract()
     if full or args.analyze:
-        run_analyze()
+        run_analyze(limit=args.limit, min_mentions=args.min_mentions)
     if full or args.generate:
         run_generate()
 
