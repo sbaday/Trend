@@ -31,7 +31,7 @@ services:
       db:
         condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
     restart: unless-stopped
 
   # ── Streamlit Dashboard ───────────────────────────────────────────────────
@@ -52,7 +52,7 @@ services:
       db:
         condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
     restart: unless-stopped
 
   # ── Yerel PostgreSQL (Geliştirme için) ────────────────────────────────────
@@ -82,6 +82,11 @@ services:
     container_name: trend_engine_redis
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
     restart: unless-stopped
 
   # ── Celery Worker ─────────────────────────────────────────────────────────
@@ -100,7 +105,7 @@ services:
       db:
         condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
     restart: unless-stopped
 
 volumes:
