@@ -51,8 +51,7 @@ if "@" in broker_url:
 print(f"  [Celery] Broker URL: {safe_url}")
 
 # Uygulama başlatma
-# include=['tasks'] ekleyerek worker'ın görevleri tanımasını sağlıyoruz.
-app = Celery('trend_engine', broker=broker_url, include=['tasks'])
+app = Celery('trend_engine', broker=broker_url)
 
 app.conf.update(
     task_serializer='json',
@@ -67,3 +66,7 @@ app.conf.update(
     task_ignore_result=True,
     result_backend=None
 )
+
+# Circular dependency'yi önlemek için görevleri en sonda import ediyoruz.
+# Böylece app nesnesi tamamen oluştuktan sonra görevler kayıt edilir.
+import tasks
