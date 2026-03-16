@@ -57,7 +57,7 @@ def run_collect():
 
 def run_extract():
     header("ADIM 2/4 — Veri Çıkarımı (Phrase Extraction)")
-    from db.database import get_unprocessed_signals, upsert_trend, mark_signals_processed
+    from db.database import get_unprocessed_signals, upsert_trend, mark_signals_processed, get_connection
     from extraction.phrase_extractor import extract_phrases_tfidf
     
     rows = get_unprocessed_signals(limit=500)
@@ -68,16 +68,29 @@ def run_extract():
     titles = [row[2] for row in rows]
     extracted = extract_phrases_tfidf(titles)
     
+    conn = get_connection()
+    cur = conn.cursor()
     saved = 0
     signal_ids = []
-    for row in rows:
-        sig_id, source, raw_title, url, engagement, captured_at = row
-        phrase = extracted.get(raw_title, raw_title)
-        upsert_trend(normalized_phrase=phrase, platform=source, engagement=engagement)
-        signal_ids.append(sig_id)
-        saved += 1
+    
+    try:
+        for row in rows:
+            sig_id, source, raw_title, url, engagement, captured_at = row
+            phrase = extracted.get(raw_title, raw_title)
+            # Dışarıdan cursor veriyoruz (Hızlandırma!)
+            upsert_trend(normalized_phrase=phrase, platform=source, engagement=engagement, cur=cur)
+            signal_ids.append(sig_id)
+            saved += 1
+            
+        cur.execute("UPDATE signals SET processed = TRUE WHERE id = ANY(%s)", (signal_ids,))
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        print(f"  Extraction hatası: {e}")
+    finally:
+        cur.close()
+        conn.close()
         
-    mark_signals_processed(signal_ids)
     print(f"  Toplam: {saved} sinyal tişört trendlerine (phrase) çıkarıldi.")
 
 

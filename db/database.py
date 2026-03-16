@@ -142,9 +142,17 @@ def mark_signals_processed(signal_ids):
     conn.close()
 
 
-def upsert_trend(normalized_phrase: str, platform: str, engagement: int) -> int:
-    conn = get_connection()
-    cur = conn.cursor()
+def upsert_trend(normalized_phrase: str, platform: str, engagement: int, cur=None) -> int:
+    """
+    Trend tablosuna yazar veya günceller. 
+    Batch işlemler için dışarıdan 'cur' (cursor) kabul eder.
+    """
+    external_cur = cur is not None
+    conn = None
+    if not external_cur:
+        conn = get_connection()
+        cur = conn.cursor()
+        
     now = datetime.utcnow()
     today_str = now.strftime('%Y-%m-%d')
     
@@ -176,13 +184,16 @@ def upsert_trend(normalized_phrase: str, platform: str, engagement: int) -> int:
             (trend_id, platform, engagement, today_str)
         )
             
-        conn.commit()
+        if not external_cur:
+            conn.commit()
     except Exception as e:
-        conn.rollback()
+        if not external_cur and conn:
+            conn.rollback()
         raise e
     finally:
-        cur.close()
-        conn.close()
+        if not external_cur:
+            cur.close()
+            conn.close()
     return trend_id
 
 

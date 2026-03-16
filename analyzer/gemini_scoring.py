@@ -51,7 +51,7 @@ def analyze_batch(verbose: bool = True, min_mentions: int = 3) -> int:
     api_key = os.getenv("GEMINI_API_KEY")
     client = genai.Client(api_key=api_key)
 
-    rows = get_unanalyzed(limit=30, min_mentions=min_mentions)
+    rows = get_unanalyzed(limit=40, min_mentions=min_mentions)
     if not rows:
         if verbose:
             print(f"  Analiz edilecek trend yok (min_mentions={min_mentions}).")
