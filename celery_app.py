@@ -13,15 +13,17 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# config yoksa (ilk deploy) env'den doğrudan al
+# Öncelik: REDIS_URL (Railway/Docker env) > config.yaml > default
+_env_redis = os.getenv('REDIS_URL')
+
 try:
     from config.loader import config as _cfg
     _cel = _cfg.get('celery', {})
-    broker_url  = _cel.get('broker_url',  os.getenv('REDIS_URL', 'redis://redis:6379/0'))
-    backend_url = _cel.get('backend_url', os.getenv('REDIS_URL', 'redis://redis:6379/1'))
+    broker_url  = _env_redis or _cel.get('broker_url',  'redis://redis:6379/0')
+    backend_url = _env_redis or _cel.get('backend_url', 'redis://redis:6379/1')
 except Exception:
-    broker_url  = os.getenv('REDIS_URL', 'redis://redis:6379/0')
-    backend_url = os.getenv('REDIS_URL', 'redis://redis:6379/1')
+    broker_url  = _env_redis or 'redis://redis:6379/0'
+    backend_url = _env_redis or 'redis://redis:6379/1'
 
 app = Celery('trend_engine', broker=broker_url, backend=backend_url)
 

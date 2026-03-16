@@ -33,6 +33,12 @@ def load_config() -> dict:
     cfg["api_keys"]["database"] = os.getenv("DATABASE_URL", "")
     cfg["api_keys"]["printify_token"] = os.getenv("PRINTIFY_API_TOKEN", "")
     cfg["api_keys"]["printify_shop"]  = os.getenv("PRINTIFY_SHOP_ID", "")
+    
+    # Celery için URL ezme (varsa)
+    if os.getenv("REDIS_URL"):
+        if "celery" not in cfg: cfg["celery"] = {}
+        cfg["celery"]["broker_url"] = os.getenv("REDIS_URL")
+        cfg["celery"]["backend_url"] = os.getenv("REDIS_URL")
 
     return cfg
 
