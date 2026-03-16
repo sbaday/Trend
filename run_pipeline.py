@@ -160,23 +160,36 @@ def run_schedule():
     scheduler = BlockingScheduler()
     
     def job_full_cycle():
-        logging.info("--- Tam Döngü Başlıyor (Toplama + Çıkarma + Analiz + Üretim) ---")
+        logging.info("--- Tam Döngü Başlıyor ---")
+        # Celery varsa asenkron, yoksa senkron çalış (graceful fallback)
         try:
-            run_collect()
-            run_extract()
-            run_analyze()
-            run_generate()
-            logging.info("Tam döngü başarıyla tamamlandı.")
-        except Exception as e:
-            logging.error(f"Tam döngü sırasında kritik hata: {e}")
+            from tasks import dispatch_full_pipeline
+            task_id = dispatch_full_pipeline()
+            logging.info(f"Görevler asenkron kuyruğa gönderildi. ID: {task_id}")
+        except Exception as celery_err:
+            logging.warning(f"Celery kullanılamıyor ({celery_err}), senkron modda çalışıyor...")
+            try:
+                run_collect()
+                run_extract()
+                run_analyze()
+                run_generate()
+                logging.info("Senkron döngü başarıyla tamamlandı.")
+            except Exception as e:
+                logging.error(f"Döngü hatası: {e}")
 
     def job_momentum_check():
         logging.info("--- Günlük Momentum Doğrulama Job'ı Başlıyor ---")
         try:
-            run_momentum()
-            logging.info("Momentum doğrulaması tamamlandı.")
-        except Exception as e:
-            logging.error(f"Momentum doğrulaması sırasında hata: {e}")
+            from tasks import momentum_task
+            momentum_task.delay()
+            logging.info("Momentum görevi kuyruğa gönderildi.")
+        except Exception as celery_err:
+            logging.warning(f"Celery kullanılamıyor ({celery_err}), senkron çalışıyor...")
+            try:
+                run_momentum()
+                logging.info("Momentum doğrulaması tamamlandı.")
+            except Exception as e:
+                logging.error(f"Momentum doğrulaması sırasında hata: {e}")
         
     # Scheduler interval'i config'den al
     _interval_hours = _sched_cfg.get('full_cycle_interval_hours', 2)

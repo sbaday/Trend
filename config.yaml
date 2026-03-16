@@ -40,3 +40,12 @@ sources:
     enabled: true
   hackernews:
     enabled: true
+
+# ──────────────────────────────────────────
+# Celery + Redis (Faz 4)
+# ──────────────────────────────────────────
+celery:
+  # Docker Compose içinde 'redis' servis adı kullanılır.
+  # Railway'de REDIS_URL env değişkeni bu değerin üzerine yazar.
+  broker_url: "redis://redis:6379/0"
+  backend_url: "redis://redis:6379/1"

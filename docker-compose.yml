@@ -6,9 +6,9 @@ version: '3.8'
 # Bu dosya sadece LOKAL geliştirme/test içindir.
 #
 # Kullanım:
-#   docker-compose up --build   # İlk kez veya kod değişikliğinde
-#   docker-compose up -d        # Arka planda başlat
-#   docker-compose down         # Durdur
+#   docker compose up --build   # İlk kez veya kod değişikliğinde
+#   docker compose up -d        # Arka planda başlat
+#   docker compose down         # Durdur
 # ──────────────────────────────────────────────────────────────────────────────
 
 services:
@@ -68,6 +68,33 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
+
+  # ── Redis (Mesaj Kuyruğu) ──────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: trend_engine_redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  # ── Celery Worker ─────────────────────────────────────────────────────────
+  celery_worker:
+    build: .
+    container_name: trend_engine_worker
+    command: celery -A celery_app worker --loglevel=info --concurrency=2
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://trenduser:trendpass@db:5432/trenddb
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     restart: unless-stopped
 
 volumes:
