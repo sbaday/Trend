@@ -21,6 +21,7 @@ services:
     environment:
       # Lokal geliştirmede Railway DATABASE_URL yerine yerel DB kullan
       - DATABASE_URL=postgresql://trenduser:trendpass@db:5432/trenddb
+      - REDIS_URL=redis://redis:6379/0
     volumes:
       # Kod değişikliklerini anında yansıtır (hot reload için)
       - .:/app
@@ -29,6 +30,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
     restart: unless-stopped
 
   # ── Streamlit Dashboard ───────────────────────────────────────────────────
@@ -42,11 +45,14 @@ services:
       - .env
     environment:
       - DATABASE_URL=postgresql://trenduser:trendpass@db:5432/trenddb
+      - REDIS_URL=redis://redis:6379/0
     volumes:
       - .:/app
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
     restart: unless-stopped
 
   # ── Yerel PostgreSQL (Geliştirme için) ────────────────────────────────────
