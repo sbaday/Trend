@@ -1,0 +1,201 @@
+id;phrase;source;subreddit;trend_score;niche;humor;identity;giftability;design;created_at
+734;thatssomeotherdevsproblem;extracted;;8.6;Occupation;8.0;9.0;8.0;10.0;2026-03-15 16:31:12.589596
+715;mommyhalpimscaredofregex;extracted;;8.4;Occupation;8.0;9.0;8.0;9.0;2026-03-15 16:31:11.175381
+725;cantleavevimthough;extracted;;8.3;Occupation;8.0;9.0;7.0;10.0;2026-03-15 16:31:12.176148
+716;justonemorementalrefactor;extracted;;8.2;Occupation;7.0;9.0;8.0;10.0;2026-03-15 16:31:11.215168
+2083;amiarealprogrammeryet;extracted;;8.2;Occupation;7.0;9.0;8.0;10.0;2026-03-17 02:34:02.445297
+448;overwhelmed overstimulated and judged;extracted;;8.2;Funny;7.0;9.0;8.0;10.0;2026-03-15 13:26:17.178416
+2251;cat shawarma;extracted;;8.2;Pets;8.0;7.0;9.0;9.0;2026-03-17 08:33:44.538807
+1167;cat suspect;extracted;;8.2;Pets;8.0;7.0;9.0;9.0;2026-03-16 00:51:47.670688
+636;i m cooked chat;extracted;;8.0;Gaming;8.0;9.0;6.0;10.0;2026-03-15 16:31:05.395824
+192;coworker with verbal diarrhea;extracted;;7.9;Occupation;8.0;6.0;9.0;9.0;2026-03-15 12:50:48.999156
+939;pregnancy;extracted;;7.8;Family;4.0;10.0;10.0;9.0;2026-03-15 16:51:52.511837
+1793;actuallycryinginside;extracted;;7.7;Aesthetic;7.0;9.0;6.0;10.0;2026-03-16 20:10:33.057426
+1948;kangina;extracted;;7.7;Funny;7.0;9.0;6.0;10.0;2026-03-16 20:34:23.380651
+718;stackoverflowcopypastewastheoriginalvibecoding;extracted;;7.6;Occupation;7.0;9.0;8.0;6.0;2026-03-15 16:31:11.298385
+2165;short guys;extracted;;7.6;Funny;6.0;9.0;7.0;10.0;2026-03-17 04:33:51.444997
+1071;overstimulated;extracted;;7.6;Aesthetic;6.0;9.0;7.0;10.0;2026-03-15 20:51:44.981091
+720;mangitishard;extracted;;7.6;Occupation;7.0;8.0;7.0;9.0;2026-03-15 16:31:11.384725
+319;2nd child;extracted;;7.5;Family;5.0;8.0;9.0;10.0;2026-03-15 12:50:57.949559
+150;adhd fighting;extracted;;7.4;Neurodiversity;6.0;9.0;7.0;9.0;2026-03-15 12:50:45.388955
+197;is it normal to hate phone calls;extracted;;7.4;Funny;6.0;9.0;7.0;9.0;2026-03-15 12:50:49.252010
+1026;broke boyfriend;extracted;;7.4;Funny;7.0;6.0;8.0;10.0;2026-03-15 18:51:46.993904
+1207;introvert;extracted;;7.4;Aesthetic;4.0;10.0;8.0;10.0;2026-03-16 00:51:57.781479
+1281;calcifer;extracted;;7.4;Aesthetic;4.0;9.0;9.0;10.0;2026-03-16 02:51:46.116166
+675;i’m a grandmother 👵🏽 🐱;extracted;;7.4;Family;4.0;9.0;9.0;10.0;2026-03-15 16:31:07.808751
+2095;want go;extracted;;7.4;Pets;6.0;8.0;7.0;10.0;2026-03-17 02:34:03.563805
+713;poorstackoverflow;extracted;;7.2;Occupation;6.0;8.0;7.0;9.0;2026-03-15 16:31:11.099726
+710;eighthnormalform;extracted;;7.2;Occupation;6.0;8.0;7.0;9.0;2026-03-15 16:31:10.970665
+1993;burritocode;extracted;;7.2;Occupation;6.0;8.0;7.0;9.0;2026-03-16 22:33:56.327322
+955;peak adulting;extracted;;7.2;Funny;6.0;8.0;7.0;9.0;2026-03-15 16:51:53.965138
+1976;this is messing with my muscle memory;extracted;;7.2;Gaming;6.0;8.0;7.0;9.0;2026-03-16 22:33:54.796516
+148;infection adhd;extracted;;7.2;Neurodiversity Humor;6.0;8.0;7.0;9.0;2026-03-15 12:50:45.099825
+287;the layoffs are happening;extracted;;7.1;Corporate Humor;6.0;8.0;6.0;10.0;2026-03-15 12:50:55.482683
+744;cat dante;extracted;;7.0;Pets;6.0;7.0;8.0;8.0;2026-03-15 16:31:13.071343
+1969;bridal;extracted;;7.0;Aesthetic;2.0;9.0;10.0;10.0;2026-03-16 22:33:54.000734
+382;stupid questions;extracted;;7.0;Funny;6.0;7.0;7.0;9.0;2026-03-15 12:51:02.680591
+153;diagnosis 101;extracted;;7.0;Medical Humor;6.0;7.0;7.0;9.0;2026-03-15 12:50:45.510422
+2097;sweet treat;extracted;;6.9;Aesthetic;4.0;9.0;7.0;10.0;2026-03-17 02:34:03.608675
+429;introverted girl;extracted;;6.9;Aesthetic;4.0;9.0;7.0;10.0;2026-03-15 13:26:12.106081
+732;gitstatus;extracted;;6.9;Occupation;4.0;9.0;7.0;10.0;2026-03-15 16:31:12.527272
+712;fourhoursofcoding;extracted;;6.8;Occupation;5.0;8.0;7.0;9.0;2026-03-15 16:31:11.057116
+1411;mom;extracted;;6.8;Family;1.0;10.0;10.0;10.0;2026-03-16 08:51:48.321693
+841;teacher;extracted;;6.8;Occupation;1.0;10.0;10.0;10.0;2026-03-15 16:51:44.350286
+622;no;extracted;;6.8;Aesthetic;6.0;8.0;5.0;10.0;2026-03-15 16:31:04.840927
+1765;mothers;extracted;;6.8;Family;1.0;10.0;10.0;10.0;2026-03-16 20:10:32.182232
+832;mother;extracted;;6.8;Family;1.0;10.0;10.0;10.0;2026-03-15 16:51:43.447451
+499;question homophones;extracted;;6.8;Hobby;6.0;7.0;6.0;10.0;2026-03-15 15:26:11.310763
+1001;dad;extracted;;6.8;Family;1.0;10.0;10.0;10.0;2026-03-15 18:51:42.583523
+264;pie roots;extracted;;6.8;Hobby;5.0;7.0;8.0;9.0;2026-03-15 12:50:53.789166
+724;gaslightingasaservice;extracted;;6.8;Occupation;7.0;6.0;6.0;9.0;2026-03-15 16:31:12.138978
+547;python;extracted;;6.8;Occupation;3.0;9.0;8.0;10.0;2026-03-15 16:30:57.532346
+193;people are boring;extracted;;6.8;Aesthetic;5.0;8.0;6.0;10.0;2026-03-15 12:50:49.044356
+412;adhd so;extracted;;6.8;Funny;5.0;8.0;6.0;10.0;2026-03-15 13:26:09.731819
+628;the urge ughh;extracted;;6.7;Funny;6.0;8.0;5.0;9.0;2026-03-15 16:31:05.137629
+1831;the 49mb web page;extracted;;6.7;Occupation;6.0;8.0;5.0;9.0;2026-03-16 20:26:53.557724
+1558;datastealingasaservice;extracted;;6.7;Occupation;6.0;7.0;6.0;9.0;2026-03-16 16:51:46.427757
+1988;dog licked;extracted;;6.6;Pets;4.0;8.0;7.0;10.0;2026-03-16 22:33:55.874806
+709;itengineersjustneedtoretransmitdrugdealersneedalaw;extracted;;6.6;Occupation;6.0;8.0;7.0;5.0;2026-03-15 16:31:10.930179
+2034;not rhetorical;extracted;;6.5;Funny;5.0;7.0;6.0;10.0;2026-03-17 00:33:52.393601
+2290;chattahoochee;extracted;;6.5;Hobby;4.0;8.0;7.0;9.0;2026-03-17 10:33:45.581093
+1296;dad tip;extracted;;6.5;Family;4.0;8.0;7.0;9.0;2026-03-16 04:51:41.119256
+1013;cracked;extracted;;6.5;Gaming;4.0;8.0;7.0;9.0;2026-03-15 18:51:45.383241
+523;dig man pages;extracted;;6.5;Occupation;4.0;8.0;7.0;9.0;2026-03-15 16:30:56.686652
+158;executive function;extracted;;6.4;Neurodiversity;2.0;9.0;8.0;10.0;2026-03-15 12:50:45.717643
+2187;year old rescue;extracted;;6.4;Pets;2.0;9.0;8.0;10.0;2026-03-17 06:33:59.066569
+1153;adopted;extracted;;6.4;Family;2.0;9.0;8.0;10.0;2026-03-16 00:51:44.733551
+637;hopemaxxing;extracted;;6.4;Aesthetic;6.0;7.0;5.0;9.0;2026-03-15 16:31:05.456647
+857;gay;extracted;;6.4;Aesthetic;2.0;10.0;7.0;10.0;2026-03-15 16:51:45.606896
+949;30;extracted;;6.4;Family;2.0;8.0;9.0;10.0;2026-03-15 16:51:52.949525
+1603;stole boyfriend;extracted;;6.4;Funny;6.0;7.0;5.0;9.0;2026-03-16 18:43:12.592937
+600;cats;extracted;;6.4;Pets;2.0;9.0;8.0;10.0;2026-03-15 16:31:03.394755
+245;etymology trivia;extracted;;6.4;Linguistics/Trivia;2.0;8.0;9.0;10.0;2026-03-15 12:50:52.716419
+374;victory sunday;extracted;;6.4;Hobby;2.0;9.0;8.0;10.0;2026-03-15 12:51:02.335557
+377;13 2026;extracted;;6.4;Family;2.0;8.0;9.0;10.0;2026-03-15 12:51:02.490459
+664;18th;extracted;;6.4;Family;2.0;8.0;9.0;10.0;2026-03-15 16:31:07.292196
+1935;camping glamping;extracted;;6.4;Hobby;3.0;8.0;8.0;9.0;2026-03-16 20:34:22.421282
+1931;calls;extracted;;6.4;Crypto;4.0;8.0;6.0;10.0;2026-03-16 20:34:22.289222
+427;depressed introvert;extracted;;6.4;Aesthetic;4.0;9.0;5.0;10.0;2026-03-15 13:26:11.968287
+221;national park;extracted;;6.4;Outdoor;1.0;9.0;9.0;10.0;2026-03-15 12:50:51.133414
+950;speed is relative;extracted;;6.4;Fitness;5.0;7.0;6.0;9.0;2026-03-15 16:51:53.558994
+2197;broke kids;extracted;;6.4;Family;5.0;7.0;6.0;9.0;2026-03-17 06:34:00.272467
+1375;don think;extracted;;6.4;Aesthetic;6.0;7.0;4.0;10.0;2026-03-16 06:51:40.122770
+623;et tu;extracted;;6.4;Aesthetic;6.0;5.0;6.0;10.0;2026-03-15 16:31:04.880640
+218;perthshire scotland;extracted;;6.4;Travel & Local Pride;1.0;9.0;9.0;10.0;2026-03-15 12:50:50.943602
+146;blindness strikes;extracted;;6.4;funny;6.0;5.0;6.0;10.0;2026-03-15 12:50:45.022473
+2178;obsessed;extracted;;6.3;Aesthetic;3.0;8.0;7.0;10.0;2026-03-17 06:33:58.375879
+1716;being introvert;extracted;;6.3;General;3.0;9.0;6.0;10.0;2026-03-16 20:04:46.901492
+1216;camp;extracted;;6.3;Aesthetic;3.0;8.0;7.0;10.0;2026-03-16 02:51:35.406723
+889;copy;extracted;;6.3;Family;3.0;7.0;8.0;10.0;2026-03-15 16:51:47.361076
+2000;teton;extracted;;6.3;Aesthetic;2.0;8.0;9.0;9.0;2026-03-16 22:33:57.301411
+1273;bichon;extracted;;6.3;Pets;2.0;9.0;8.0;9.0;2026-03-16 02:51:43.559932
+1326;liverpool;extracted;;6.3;Hobby;1.0;10.0;9.0;8.0;2026-03-16 04:51:51.310395
+1981;persian;extracted;;6.3;Pets;2.0;9.0;8.0;9.0;2026-03-16 22:33:55.207643
+594;meow;extracted;;6.3;Pets;3.0;8.0;7.0;10.0;2026-03-15 16:31:03.141384
+699;anxiety;extracted;;6.3;Aesthetic;3.0;9.0;6.0;10.0;2026-03-15 16:31:09.497387
+574;bassmaster;extracted;;6.3;Hobby;2.0;9.0;8.0;9.0;2026-03-15 16:30:59.544528
+154;defeated final;extracted;;6.3;Academic;3.0;7.0;8.0;10.0;2026-03-15 12:50:45.549175
+723;feeltheaura;extracted;;6.2;Aesthetic;4.0;8.0;6.0;9.0;2026-03-15 16:31:12.105595
+379;physique phriday;extracted;;6.2;Fitness;4.0;8.0;6.0;9.0;2026-03-15 12:51:02.561720
+626;shut it keith;extracted;;6.2;Funny;7.0;3.0;6.0;10.0;2026-03-15 16:31:05.055038
+614;🇺🇸🫡🇺🇸🫡🇺🇸🫡🦅🦅🦅🏈🏈;extracted;;6.2;General;2.0;9.0;7.0;10.0;2026-03-15 16:31:04.196836
+2194;canadian;extracted;;6.2;General;2.0;9.0;7.0;10.0;2026-03-17 06:33:59.686056
+1597;based;extracted;;6.2;Aesthetic;4.0;8.0;5.0;10.0;2026-03-16 17:00:20.168230
+753;3 brotherly kitties in a row;extracted;;6.2;Pets;3.0;7.0;8.0;9.0;2026-03-15 16:31:14.446206
+2191;garden gods;extracted;;6.2;Hobby;3.0;7.0;8.0;9.0;2026-03-17 06:33:59.613115
+882;struggling;extracted;;6.2;Aesthetic;4.0;8.0;5.0;10.0;2026-03-15 16:51:47.136082
+536;bezier;extracted;;6.2;Occupation;3.0;8.0;7.0;9.0;2026-03-15 16:30:57.088565
+353;colorado hits different;extracted;;6.2;Aesthetic;3.0;8.0;7.0;9.0;2026-03-15 12:51:00.825903
+1911;brothers;extracted;;6.1;Family;1.0;8.0;9.0;10.0;2026-03-16 20:34:20.481958
+818;son;extracted;;6.1;Family;1.0;8.0;9.0;10.0;2026-03-15 16:51:42.815129
+1017;husband;extracted;;6.1;Family;1.0;8.0;9.0;10.0;2026-03-15 18:51:46.361551
+271;being inclusive;extracted;;6.1;Social Justice / DEI / Values;1.0;9.0;8.0;10.0;2026-03-15 12:50:54.781913
+275;i weep for the future;extracted;;6.1;Funny;5.0;6.0;6.0;9.0;2026-03-15 12:50:54.970274
+1256;nintendo;extracted;;6.1;Gaming;1.0;9.0;8.0;10.0;2026-03-16 02:51:41.046775
+1539;barca;extracted;;6.1;Hobby;1.0;9.0;8.0;10.0;2026-03-16 16:51:37.907905
+2346;16 2026;extracted;;6.1;Family;1.0;8.0;9.0;10.0;2026-03-17 14:33:36.169260
+672;18;extracted;;6.1;Family;1.0;8.0;9.0;10.0;2026-03-15 16:31:07.679602
+537;1988;extracted;;6.1;Aesthetic;1.0;8.0;9.0;10.0;2026-03-15 16:30:57.122721
+234;usa hiking;extracted;;6.1;Outdoor;1.0;8.0;9.0;10.0;2026-03-15 12:50:51.676441
+226;5220m 17125ft;extracted;;6.1;Outdoor;1.0;8.0;9.0;10.0;2026-03-15 12:50:51.374757
+643;25;extracted;;6.0;Family;3.0;6.0;8.0;10.0;2026-03-15 16:31:05.656624
+845;grok;extracted;;6.0;General;3.0;8.0;6.0;10.0;2026-03-15 16:51:44.645662
+283;4th grade;extracted;;6.0;Family;2.0;8.0;8.0;9.0;2026-03-15 12:50:55.341085
+180;tent camping;extracted;;6.0;Outdoor, Camping, Adventure;2.0;8.0;8.0;9.0;2026-03-15 12:50:47.640524
+1314;bro;extracted;;6.0;General;3.0;8.0;6.0;10.0;2026-03-16 04:51:48.876814
+2245;millenials;extracted;;6.0;General;3.0;9.0;5.0;10.0;2026-03-17 08:33:44.218547
+2261;thankyoullm;extracted;;6.0;Hobby;4.0;7.0;6.0;9.0;2026-03-17 10:33:42.949502
+1146;cat knows;extracted;;6.0;Pets;4.0;7.0;6.0;9.0;2026-03-15 22:51:42.367186
+1669;so invested;extracted;;6.0;Aesthetic;4.0;7.0;6.0;9.0;2026-03-16 19:39:27.378067
+1297;broke;extracted;;6.0;Funny;5.0;8.0;3.0;10.0;2026-03-16 04:51:41.823092
+745;cute hadès;extracted;;6.0;Aesthetic;4.0;6.0;7.0;9.0;2026-03-15 16:31:13.105705
+425;sadness kinda;extracted;;6.0;Aesthetic;4.0;8.0;5.0;9.0;2026-03-15 13:26:11.928847
+747;kitten;extracted;;6.0;Pets;2.0;7.0;8.0;10.0;2026-03-15 16:31:13.856055
+1012;yosemite;extracted;;6.0;Aesthetic;1.0;8.0;9.0;9.0;2026-03-15 18:51:45.311676
+1422;dog life;extracted;;6.0;Pets;2.0;8.0;7.0;10.0;2026-03-16 10:51:46.287272
+362;sequoia national;extracted;;6.0;Aesthetic;1.0;8.0;9.0;9.0;2026-03-15 12:51:01.163266
+1799;clutch;extracted;;5.9;Gaming;3.0;8.0;6.0;9.0;2026-03-16 20:16:35.856982
+133;sbcl fibers – lightweight cooperative threads;extracted;;5.9;Occupation;3.0;8.0;6.0;9.0;2026-03-15 12:50:44.427550
+2167;chat;extracted;;5.9;Gaming;4.0;7.0;5.0;10.0;2026-03-17 04:33:51.725347
+524;tcp;extracted;;5.9;Occupation;3.0;8.0;6.0;9.0;2026-03-15 16:30:56.722465
+667;cheese;extracted;;5.9;Hobby;4.0;7.0;5.0;10.0;2026-03-15 16:31:07.481792
+875;vietnam;extracted;;5.8;General;1.0;9.0;7.0;10.0;2026-03-15 16:51:46.643566
+1956;southern;extracted;;5.8;Aesthetic;1.0;9.0;7.0;10.0;2026-03-16 20:34:23.582480
+1263;artist;extracted;;5.8;Hobby;1.0;9.0;7.0;10.0;2026-03-16 02:51:42.180930
+1048;portuguese;extracted;;5.8;General;1.0;9.0;7.0;10.0;2026-03-15 20:51:35.107775
+101;show hn;extracted;;5.8;Tech;1.0;9.0;7.0;10.0;2026-03-15 12:50:42.901834
+1880;apprehended;extracted;;5.8;Pets;6.0;4.0;5.0;10.0;2026-03-16 20:26:55.119754
+1231;canada;extracted;;5.8;General;1.0;9.0;7.0;10.0;2026-03-16 02:51:38.281061
+1083;usa;extracted;;5.8;General;1.0;9.0;7.0;10.0;2026-03-15 22:51:33.151214
+607;potatoes;extracted;;5.8;Funny;6.0;5.0;4.0;10.0;2026-03-15 16:31:03.922339
+714;famouslastwords;extracted;;5.8;Funny;6.0;4.0;5.0;10.0;2026-03-15 16:31:11.138733
+15;sukihana;extracted;;5.8;Aesthetic;5.0;7.0;4.0;9.0;2026-03-15 12:33:22.174683
+1825;campfire;extracted;;5.8;Hobby;2.0;7.0;8.0;9.0;2026-03-16 20:16:37.925525
+1499;middle school;extracted;;5.8;Family;2.0;8.0;7.0;9.0;2026-03-16 14:51:28.756705
+1076;roots;extracted;;5.8;Family;2.0;8.0;7.0;9.0;2026-03-15 22:51:31.919629
+879;shy;extracted;;5.8;Aesthetic;3.0;8.0;5.0;10.0;2026-03-15 16:51:46.993573
+771;croton;extracted;;5.8;Hobby;2.0;8.0;7.0;9.0;2026-03-15 16:31:17.220034
+770;gorge;extracted;;5.8;Aesthetic;3.0;7.0;6.0;10.0;2026-03-15 16:31:17.183770
+1067;rainier;extracted;;5.8;Aesthetic;2.0;8.0;7.0;9.0;2026-03-15 20:51:44.404088
+903;camping trips;extracted;;5.8;Hobby;2.0;8.0;7.0;9.0;2026-03-15 16:51:48.350649
+124;an ode to bzip;extracted;;5.8;Hobby;4.0;7.0;5.0;9.0;2026-03-15 12:50:44.003969
+128;mcp is dead long live mcp;extracted;;5.8;Hobby;4.0;7.0;5.0;9.0;2026-03-15 12:50:44.216527
+634;it’s an endless cycle;extracted;;5.8;General;4.0;7.0;5.0;9.0;2026-03-15 16:31:05.330205
+1279;bewaretheidesofmarch;extracted;;5.8;Hobby;4.0;5.0;7.0;9.0;2026-03-16 02:51:44.888502
+343;weekly in law annoyances;extracted;;5.8;Family;4.0;7.0;5.0;9.0;2026-03-15 12:50:59.816837
+611;boss;extracted;;5.7;Occupation;2.0;6.0;8.0;10.0;2026-03-15 16:31:04.068649
+727;top5thingsthatneverhappened;extracted;;5.7;Funny;6.0;5.0;4.0;9.0;2026-03-15 16:31:12.245620
+762;13;extracted;;5.7;Family;2.0;6.0;8.0;10.0;2026-03-15 16:31:15.006723
+528;rust;extracted;;5.7;Gaming;2.0;8.0;6.0;10.0;2026-03-15 16:30:56.841106
+748;taken;extracted;;5.7;Family;2.0;8.0;6.0;10.0;2026-03-15 16:31:13.898008
+1161;aging;extracted;;5.6;Funny;3.0;6.0;7.0;9.0;2026-03-16 00:51:45.639826
+1186;done;extracted;;5.6;General;4.0;6.0;5.0;10.0;2026-03-16 00:51:52.121926
+1127;snack;extracted;;5.6;Aesthetic;4.0;6.0;5.0;10.0;2026-03-15 22:51:38.938865
+485;kniterate notes;extracted;;5.6;Hobby;3.0;7.0;6.0;9.0;2026-03-15 15:26:07.159825
+155;bad bro;extracted;;5.6;Funny;4.0;6.0;5.0;10.0;2026-03-15 12:50:45.591497
+1374;turned mom;extracted;;5.6;Family;3.0;7.0;6.0;9.0;2026-03-16 06:51:39.958313
+1671;a woman and her horse;extracted;;5.6;Hobby;1.0;9.0;8.0;7.0;2026-03-16 19:39:27.496985
+728;programminginterviews;extracted;;5.6;Occupation;3.0;8.0;5.0;9.0;2026-03-15 16:31:12.276700
+333;disappointed mother;extracted;;5.6;Family;4.0;6.0;5.0;10.0;2026-03-15 12:50:59.349865
+781;alaska;extracted;;5.6;Aesthetic;1.0;8.0;7.0;10.0;2026-03-15 16:51:40.524494
+475;15 2026;extracted;;5.6;Family;1.0;7.0;8.0;10.0;2026-03-15 15:26:06.171902
+982;10 years;extracted;;5.6;Family;1.0;6.0;9.0;10.0;2026-03-15 18:51:39.182496
+1657;maker;extracted;;5.6;Hobby;1.0;8.0;7.0;10.0;2026-03-16 19:39:27.258243
+1265;family;extracted;;5.6;Family;1.0;8.0;7.0;10.0;2026-03-16 02:51:42.741220
+910;camping;extracted;;5.6;Hobby;1.0;8.0;7.0;10.0;2026-03-15 16:51:49.195626
+877;germany;extracted;;5.6;General;1.0;8.0;7.0;10.0;2026-03-15 16:51:46.830314
+1306;california;extracted;;5.6;Aesthetic;1.0;8.0;7.0;10.0;2026-03-16 04:51:45.106294
+1383;colorado;extracted;;5.6;Aesthetic;1.0;8.0;7.0;10.0;2026-03-16 06:51:43.098787
+1889;whendevsummonsopus;extracted;;5.6;Occupation;4.0;7.0;5.0;8.0;2026-03-16 20:26:55.582098
+1424;colorado usa;extracted;;5.6;Aesthetic;1.0;8.0;7.0;10.0;2026-03-16 10:51:51.278738
+869;hiking;extracted;;5.6;Hobby;1.0;8.0;7.0;10.0;2026-03-15 16:51:46.078178
+866;17125ft;extracted;;5.6;Hobby;1.0;8.0;7.0;10.0;2026-03-15 16:51:45.994521
+1289;toddler;extracted;;5.6;Family;1.0;8.0;7.0;10.0;2026-03-16 04:51:39.867512
+2274;14 years;extracted;;5.6;Family;2.0;6.0;8.0;9.0;2026-03-17 10:33:44.594202
+371;taken film;extracted;;5.6;Hobby;2.0;8.0;6.0;9.0;2026-03-15 12:51:01.537647
+768;northern utah is a hidden gem;extracted;;5.6;Aesthetic;2.0;8.0;6.0;9.0;2026-03-15 16:31:17.055146
+1196;etymology;extracted;;5.6;Hobby;2.0;8.0;6.0;9.0;2026-03-16 00:51:56.019699
+289;dark nature;extracted;;5.6;Gothic/Alternative Nature;2.0;7.0;7.0;9.0;2026-03-15 12:50:55.555443
+241;coming humantay;extracted;;5.6;Travel & Hiking;2.0;7.0;7.0;9.0;2026-03-15 12:50:52.025960
+91;solana;extracted;;5.6;Crypto;2.0;8.0;6.0;9.0;2026-03-15 12:50:42.415838
+2082;shakespeareofourtime;extracted;;5.5;Aesthetic;4.0;6.0;5.0;9.0;2026-03-17 02:34:02.399317

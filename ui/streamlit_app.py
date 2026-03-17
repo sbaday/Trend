@@ -147,7 +147,7 @@ with st.sidebar:
             if col in export_df.columns:
                 export_df[col] = export_df[col].round(1)
 
-        csv_data = export_df.to_csv(index=False, sep=';').encode('utf-8')
+        csv_data = export_df.to_csv(index=False, sep=';', decimal=',').encode('utf-8')
         st.download_button(
             label="📥 Veriyi İndir (CSV)",
             data=csv_data,
