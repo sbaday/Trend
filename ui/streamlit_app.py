@@ -67,19 +67,6 @@ with st.sidebar:
         st.cache_data.clear()
         st.rerun()
 
-    # --- Genel CSV Export ---
-    st.divider()
-    if not df.empty:
-        csv_data = df.to_csv(index=False).encode('utf-8')
-        st.download_button(
-            label="📥 Veriyi İndir (CSV)",
-            data=csv_data,
-            file_name=f"trend_export_{datetime.now().strftime('%Y%md_%H%M')}.csv",
-            mime="text/csv",
-            use_container_width=True,
-            help="O anki filtrelenmiş tabloyu CSV olarak indirir."
-        )
-
     st.divider()
     st.caption("📂 DB: `PostgreSQL (Railway)`")
     try:
@@ -149,6 +136,20 @@ def load_data(min_s, niches, d_range):
 
 
 df = load_data(min_score, niche_filter, date_range)
+
+# --- Genel CSV Export (Sidebar'da görünmesi için sidebar context'ine giriyoruz) ---
+with st.sidebar:
+    if not df.empty:
+        csv_data = df.to_csv(index=False).encode('utf-8')
+        st.download_button(
+            label="📥 Veriyi İndir (CSV)",
+            data=csv_data,
+            file_name=f"trend_export_{datetime.now().strftime('%Y%md_%H%M')}.csv",
+            mime="text/csv",
+            use_container_width=True,
+            help="O anki filtrelenmiş tabloyu CSV olarak indirir."
+        )
+    st.divider()
 
 # ── Üst metrikler ─────────────────────────────────────────────────────────────
 m1, m2, m3, m4 = st.columns(4)
