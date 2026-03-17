@@ -140,11 +140,18 @@ df = load_data(min_score, niche_filter, date_range)
 # --- Genel CSV Export (Sidebar'da görünmesi için sidebar context'ine giriyoruz) ---
 with st.sidebar:
     if not df.empty:
-        csv_data = df.to_csv(index=False, sep=';').encode('utf-8')
+        # Export için veriyi temizle (skorları yuvarla)
+        export_df = df.copy()
+        export_df["trend_score"] = export_df["trend_score"].round(1)
+        for col in ["humor", "identity", "giftability", "design"]:
+            if col in export_df.columns:
+                export_df[col] = export_df[col].round(1)
+
+        csv_data = export_df.to_csv(index=False, sep=';').encode('utf-8')
         st.download_button(
             label="📥 Veriyi İndir (CSV)",
             data=csv_data,
-            file_name=f"trend_export_{datetime.now().strftime('%Y%md_%H%M')}.csv",
+            file_name=f"trend_export_{datetime.now().strftime('%Y%m%d_%H%M')}.csv",
             mime="text/csv",
             use_container_width=True,
             help="O anki filtrelenmiş tabloyu CSV olarak indirir."

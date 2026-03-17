@@ -54,9 +54,10 @@ def run_extract():
     
     try:
         for row in rows:
-            sig_id, source, raw_title, url, engagement, captured_at = row
+            # SELECT id, source, raw_title, url, engagement, captured_at, subsource
+            sig_id, source, raw_title, url, engagement, captured_at, subsource = row
             phrase = extracted.get(raw_title, raw_title)
-            upsert_trend(normalized_phrase=phrase, platform=source, engagement=engagement, cur=cur)
+            upsert_trend(normalized_phrase=phrase, platform=source, engagement=engagement, cur=cur, subreddit=subsource)
             signal_ids.append(sig_id)
             saved += 1
             

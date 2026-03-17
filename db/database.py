@@ -75,8 +75,8 @@ def init_db():
             design            REAL DEFAULT 0.0
         )
     """)
-    cur.execute("CREATE INDEX IF NOT EXISTS idx_trends_phrase ON trends(normalized_phrase)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_trends_score ON trends(ai_score)")
+    cur.execute("ALTER TABLE trends ADD COLUMN IF NOT EXISTS subreddit TEXT")
 
     # 4. Zaman Serisi (Günlük Agregasyon)
     cur.execute("""
@@ -137,7 +137,7 @@ def insert_signal(source: str, raw_title: str, subsource: str = None, url: str =
 def get_unprocessed_signals(limit=500):
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("SELECT id, source, raw_title, url, engagement, captured_at FROM signals WHERE processed = FALSE ORDER BY id ASC LIMIT %s", (limit,))
+    cur.execute("SELECT id, source, raw_title, url, engagement, captured_at, subsource FROM signals WHERE processed = FALSE ORDER BY id ASC LIMIT %s", (limit,))
     rows = cur.fetchall()
     cur.close()
     conn.close()
@@ -154,7 +154,7 @@ def mark_signals_processed(signal_ids):
     conn.close()
 
 
-def upsert_trend(normalized_phrase: str, platform: str, engagement: int, cur=None) -> int:
+def upsert_trend(normalized_phrase: str, platform: str, engagement: int, cur=None, subreddit: str = None) -> int:
     """
     Trend tablosuna yazar veya günceller. 
     Batch işlemler için dışarıdan 'cur' (cursor) kabul eder.
@@ -178,8 +178,8 @@ def upsert_trend(normalized_phrase: str, platform: str, engagement: int, cur=Non
             trend_id, first_seen = existing
             longevity = (now - first_seen).days if first_seen else 0
             cur.execute(
-                "UPDATE trends SET last_seen = %s, total_mentions = total_mentions + 1, longevity_days = %s WHERE id = %s",
-                (now, longevity, trend_id)
+                "UPDATE trends SET last_seen = %s, total_mentions = total_mentions + 1, longevity_days = %s, subreddit = COALESCE(subreddit, %s) WHERE id = %s",
+                (now, longevity, subreddit, trend_id)
             )
         else:
             # Sentiment: yeni phrase için hesapla
@@ -190,8 +190,8 @@ def upsert_trend(normalized_phrase: str, platform: str, engagement: int, cur=Non
                 sentiment = 0.0
 
             cur.execute(
-                "INSERT INTO trends (normalized_phrase, first_seen, last_seen, total_mentions, sentiment_score, longevity_days) VALUES (%s, %s, %s, 1, %s, 0) RETURNING id",
-                (normalized_phrase, now, now, sentiment)
+                "INSERT INTO trends (normalized_phrase, first_seen, last_seen, total_mentions, sentiment_score, longevity_days, subreddit) VALUES (%s, %s, %s, 1, %s, 0, %s) RETURNING id",
+                (normalized_phrase, now, now, sentiment, subreddit)
             )
             trend_id = cur.fetchone()[0]
             
@@ -275,7 +275,7 @@ def get_top_trends(limit=50, min_score=7.0, niches=None, start_date=None, end_da
     cur = conn.cursor()
     
     query = """
-        SELECT id, normalized_phrase, 'extracted' as source, '' as subreddit, 
+        SELECT id, normalized_phrase, 'extracted' as source, COALESCE(subreddit, '') as subreddit, 
         ai_score as trend_score, niche, humor, identity, giftability, design, first_seen as created_at 
         FROM trends 
         WHERE analyzed=1 AND ai_score >= %s
