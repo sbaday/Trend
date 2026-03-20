@@ -132,6 +132,13 @@ def load_data(min_s, niches, d_range):
     cols = ["id", "phrase", "source", "subreddit", "trend_score", "niche",
             "humor", "identity", "giftability", "design", "created_at",
             "sentiment", "longevity"]
+    
+    # Cache mismatch check (eski cache 11 kolon dönebilir, yeni kod 13 bekliyor)
+    if rows and len(rows[0]) != len(cols):
+        st.warning("⚠️ Veri yapısı uyumsuzluğu (ömbellek hatası). Lütfen sol menüden 'Önbelleği Temizle' butonuna basın.")
+        # Eşleşen kısmını al (safe fallback)
+        cols = cols[:len(rows[0])]
+        
     df = pd.DataFrame(rows, columns=cols)
     return df
 
