@@ -276,7 +276,8 @@ def get_top_trends(limit=50, min_score=7.0, niches=None, start_date=None, end_da
     
     query = """
         SELECT id, normalized_phrase, 'extracted' as source, COALESCE(subreddit, '') as subreddit, 
-        ai_score as trend_score, niche, humor, identity, giftability, design, first_seen as created_at 
+        ai_score as trend_score, niche, humor, identity, giftability, design, first_seen as created_at,
+        sentiment_score, longevity_days
         FROM trends 
         WHERE analyzed=1 AND ai_score >= %s
     """

@@ -130,7 +130,8 @@ def load_data(min_s, niches, d_range):
 
     rows = get_top_trends(limit=200, min_score=min_s, niches=niches if niches else None, start_date=start_d, end_date=end_d)
     cols = ["id", "phrase", "source", "subreddit", "trend_score", "niche",
-            "humor", "identity", "giftability", "design", "created_at"]
+            "humor", "identity", "giftability", "design", "created_at",
+            "sentiment", "longevity"]
     df = pd.DataFrame(rows, columns=cols)
     return df
 
@@ -143,7 +144,7 @@ with st.sidebar:
         # Export için veriyi temizle (skorları yuvarla)
         export_df = df.copy()
         export_df["trend_score"] = export_df["trend_score"].round(1)
-        for col in ["humor", "identity", "giftability", "design"]:
+        for col in ["humor", "identity", "giftability", "design", "sentiment"]:
             if col in export_df.columns:
                 export_df[col] = export_df[col].round(1)
 
@@ -188,7 +189,11 @@ with tab1:
                 c1, c2, c3 = st.columns([5, 1, 1])
                 with c1:
                     st.markdown(f"**{row['phrase']}**")
-                    st.caption(f"📍 {row['source']} / {row['subreddit'] or '–'} · {row['niche']}")
+                    st.caption(
+                        f"📍 {row['source']} / {row['subreddit'] or '–'} · {row['niche']} · "
+                        f"⏳ {row['longevity']} Gün · "
+                        f"{'😊' if row['sentiment'] > 0 else ('😶' if row['sentiment'] == 0 else '😟')} ({row['sentiment']:.1f})"
+                    )
                 with c2:
                     st.markdown(
                         f"<span class='score-badge {badge_class}'>{score:.1f}</span>",
@@ -216,7 +221,13 @@ with tab2:
 
         col_info, col_scores = st.columns([3, 2])
         with col_info:
-            st.info(f"**Niş:** {selected_row['niche']}  |  **Kaynak:** {selected_row['source']}")
+            st.info(
+                f"**Niş:** {selected_row['niche']}  |  "
+                f"**Kaynak:** {selected_row['source']}  |  "
+                f"**Ömür:** {selected_row['longevity']} Gün  |  "
+                f"**Duygu:** {selected_row['sentiment']:.1f} "
+                f"{'😊' if selected_row['sentiment'] > 0 else ('😶' if selected_row['sentiment'] == 0 else '😟')}"
+            )
         with col_scores:
             st.write(f"😂 Mizah: `{selected_row['humor']:.0f}`  "
                      f"👥 Kimlik: `{selected_row['identity']:.0f}`  "
