@@ -136,10 +136,15 @@ def load_data(min_s, niches, d_range):
     # Cache mismatch check (eski cache 11 kolon dönebilir, yeni kod 13 bekliyor)
     if rows and len(rows[0]) != len(cols):
         st.warning("⚠️ Veri yapısı uyumsuzluğu (ömbellek hatası). Lütfen sol menüden 'Önbelleği Temizle' butonuna basın.")
-        # Eşleşen kısmını al (safe fallback)
-        cols = cols[:len(rows[0])]
         
-    df = pd.DataFrame(rows, columns=cols)
+        # Eski veriyi 11 kolonla yükle, eksik olanları default değerlerle ekle
+        old_cols = cols[:len(rows[0])]
+        df = pd.DataFrame(rows, columns=old_cols)
+        for missing_col in cols[len(rows[0]):]:
+            df[missing_col] = 0 # Default değer
+    else:
+        df = pd.DataFrame(rows, columns=cols)
+        
     return df
 
 
